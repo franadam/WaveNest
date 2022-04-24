@@ -26,7 +26,7 @@ export class User {
   password: string;
 
   @Column('enum', { enum: UserRole, default: UserRole.USER })
-  role: UserRole;
+  roles: UserRole;
 
   @Column('text', { array: true, default: [] })
   chart: string[];

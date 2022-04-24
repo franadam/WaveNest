@@ -47,6 +47,7 @@
     "express-formidable": "^1.2.0",
     "helmet": "^5.0.2",
     "mailgen": "^2.0.22",
+    "nest-access-control": "^2.2.0",
     "passport": "^0.5.2",
     "passport-google-oauth20": "^2.0.0",
     "pg": "^8.7.3",

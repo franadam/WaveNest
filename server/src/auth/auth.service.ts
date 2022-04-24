@@ -21,7 +21,7 @@ export class AuthService {
     password: string,
     firstname: string,
     lastname: string,
-    role: UserRole,
+    roles: UserRole,
     varified: boolean,
   ): Promise<User> {
     const usedEmail = await this.usersService.findOneByEmail(email);
@@ -38,7 +38,7 @@ export class AuthService {
       password: hashedPassword,
       firstname,
       lastname,
-      role,
+      roles,
       varified,
     });
     return user;
@@ -73,7 +73,7 @@ export class AuthService {
     const user = await this.usersService.findOneById(userID);
     const payload = { sub: user.id.toString(), email: user.email };
     const token = this.jwtService.sign(payload, {
-      secret: 'secret',
+      secret: process.env.JWT_SECRET,
     });
     return token;
   }
@@ -86,11 +86,11 @@ export class AuthService {
 
   async validateUser(email: string, password: string): Promise<any> {
     const user = await this.usersService.findOneByEmail(email);
+    if (!user) throw new NotFoundException('user not found');
     const isMatch = await this.comparePassword(password, user.password);
     console.log('auth service validateUser >> user', user, isMatch);
     if (user && isMatch) {
-      const { password, ...result } = user;
-      return result;
+      return user;
     }
     return null;
   }
