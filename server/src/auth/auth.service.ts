@@ -22,16 +22,15 @@ export class AuthService {
     firstname: string,
     lastname: string,
     roles: UserRole,
-    varified: boolean,
+    verified: boolean,
   ): Promise<User> {
-    const usedEmail = await this.usersService.findOneByEmail(email);
+    const isEmailToken = await this.usersService.isEmailToken(email);
 
-    if (usedEmail) {
+    if (isEmailToken) {
       throw new BadRequestException('email in used');
     }
 
-    const salt = await genSalt(8);
-    const hashedPassword = await hash(password, salt);
+    const hashedPassword = await this.usersService.hashPassword(password);
 
     const user = await this.usersService.create({
       email,
@@ -39,7 +38,7 @@ export class AuthService {
       firstname,
       lastname,
       roles,
-      varified,
+      verified,
     });
     return user;
   }

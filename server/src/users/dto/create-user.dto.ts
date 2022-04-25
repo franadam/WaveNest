@@ -19,5 +19,5 @@ export class CreateUserDto {
   roles: UserRole;
 
   @IsBoolean()
-  varified: boolean;
+  verified: boolean;
 }

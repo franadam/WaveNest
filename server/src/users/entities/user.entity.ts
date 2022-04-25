@@ -35,7 +35,7 @@ export class User {
   history: string[];
 
   @Column('boolean', { default: false })
-  varified: boolean;
+  verified: boolean;
 
   @Column({ default: '' })
   token: string;

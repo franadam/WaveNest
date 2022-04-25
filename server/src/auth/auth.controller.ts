@@ -25,7 +25,7 @@ export class AuthController {
 
   @Post('/register')
   async register(@Body() body: CreateUserDto, @Session() session: any) {
-    const { email, password, firstname, lastname, roles, varified } = body;
+    const { email, password, firstname, lastname, roles, verified } = body;
     console.log('body', body);
     const user = await this.authService.register(
       email,
@@ -33,7 +33,7 @@ export class AuthController {
       firstname,
       lastname,
       roles,
-      varified,
+      verified,
     );
     session.userID = user.id;
     const token = await this.authService.generateAuthToken(user.id);

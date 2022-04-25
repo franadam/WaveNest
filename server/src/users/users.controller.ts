@@ -8,6 +8,7 @@ import {
   Delete,
   UseGuards,
   Request,
+  Session,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -16,10 +17,14 @@ import { Roles } from './decorators/roles.decorator';
 import { RolesGuard } from './guards/roles.guard';
 import { JwtAuthGuard } from 'src/auth/Guards/jwt.guard';
 import { ACGuard, UseRoles, UserRoles } from 'nest-access-control';
+import { AuthService } from 'src/auth/auth.service';
 
 @Controller('/api/users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(
+    private readonly usersService: UsersService,
+    private readonly authService: AuthService,
+  ) {}
 
   @Get('/admin')
   @UseGuards(JwtAuthGuard, RolesGuard)
@@ -52,8 +57,25 @@ export class UsersController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
+  update(
+    @Param('id') id: string,
+    @Body() updateUserDto: Partial<UpdateUserDto>,
+  ) {
+    console.log('ucontroller pdateUserDto', updateUserDto);
     return this.usersService.update(+id, updateUserDto);
+  }
+
+  @Patch('/:id/email')
+  async updateEmail(
+    @Param('id') id: string,
+    @Body() body: { email: string },
+    @Session() session: any,
+  ) {
+    const user = await this.usersService.updateEmail(+id, body.email);
+    const token = await this.authService.generateAuthToken(+id);
+    session['x-access-token'] = token;
+    user.token = token;
+    return user;
   }
 
   @Delete(':id')
