@@ -11,8 +11,12 @@ roles
   .grant(UserRole.USER) // define new or modify existing role. also takes an array.
   .readOwn('profile')
   .updateOwn('profile')
+  .readAny('brands')
   .grant(UserRole.ADMIN) // switch to another role without breaking the chain
   .extend(UserRole.USER)
   .createAny('profile') // inherit role capabilities. also takes an array
   .updateAny('profile') // explicitly defined attributes
-  .deleteAny('profile');
+  .deleteAny('profile')
+  .createAny('brands') // inherit role capabilities. also takes an array
+  .updateAny('brands') // explicitly defined attributes
+  .deleteAny('brands');
