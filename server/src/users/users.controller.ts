@@ -9,6 +9,9 @@ import {
   UseGuards,
   Request,
   Session,
+  Query,
+  NotFoundException,
+  BadRequestException,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -18,12 +21,14 @@ import { RolesGuard } from './guards/roles.guard';
 import { JwtAuthGuard } from 'src/auth/Guards/jwt.guard';
 import { ACGuard, UseRoles, UserRoles } from 'nest-access-control';
 import { AuthService } from 'src/auth/auth.service';
+import { EmailService } from 'src/email/email.service';
 
 @Controller('/api/users')
 export class UsersController {
   constructor(
     private readonly usersService: UsersService,
     private readonly authService: AuthService,
+    private readonly emailService: EmailService,
   ) {}
 
   @Get('/admin')
@@ -51,6 +56,12 @@ export class UsersController {
     return this.usersService.findAll();
   }
 
+  @Get('/verify')
+  async verifyAccount(@Query() { validation }: { validation: string }) {
+    const payload = await this.authService.validateToken(validation);
+    return this.usersService.verifyAccount(payload.sub);
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.usersService.findOneById(+id);
@@ -68,13 +79,14 @@ export class UsersController {
   @Patch('/:id/email')
   async updateEmail(
     @Param('id') id: string,
-    @Body() body: { email: string },
+    @Body() { email }: { email: string },
     @Session() session: any,
   ) {
-    const user = await this.usersService.updateEmail(+id, body.email);
+    const user = await this.usersService.updateEmail(+id, email);
     const token = await this.authService.generateAuthToken(+id);
     session['x-access-token'] = token;
     user.token = token;
+    await this.emailService.registerEmail(user.id, user.email);
     return user;
   }
 

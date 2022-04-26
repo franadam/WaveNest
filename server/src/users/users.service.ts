@@ -76,4 +76,12 @@ export class UsersService {
     const usedEmail = await this.findOneByEmail(email);
     return !!usedEmail;
   }
+
+  async verifyAccount(userID: string) {
+    const user = await this.findOneById(+userID);
+    if (!user) throw new NotFoundException('user not found');
+    if (user.verified) throw new BadRequestException('already verefied');
+    user.verified = true;
+    return this.userRepo.save(user);
+  }
 }

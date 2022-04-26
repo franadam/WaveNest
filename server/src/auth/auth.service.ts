@@ -6,14 +6,15 @@ import {
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { hash, genSalt, compare } from 'bcrypt';
+import { EmailService } from 'src/email/email.service';
 import { User, UserRole } from '../users/entities/user.entity';
 import { UsersService } from '../users/users.service';
 
 @Injectable()
 export class AuthService {
   constructor(
-    private usersService: UsersService,
-    private jwtService: JwtService,
+    private readonly usersService: UsersService,
+    private readonly jwtService: JwtService,
   ) {}
 
   async register(
@@ -77,6 +78,17 @@ export class AuthService {
     return token;
   }
 
+  async generateRegisterToken(userID: number) {
+    const user = await this.usersService.findOneById(userID);
+    console.log('generateRegisterToken>> user', user);
+    const payload = { sub: user.id.toString() };
+    const token = this.jwtService.sign(payload, {
+      secret: process.env.JWT_SECRET,
+      // expiresIn:'19h'
+    });
+    return { token, username: `${user.firstname} ${user.lastname}` };
+  }
+
   async comparePassword(password: string, hashedPassword: string) {
     const isMatch = await compare(password, hashedPassword);
     if (!isMatch) throw new UnauthorizedException('wrong credentials');
@@ -92,5 +104,19 @@ export class AuthService {
       return user;
     }
     return null;
+  }
+
+  async validateToken(token: string) {
+    console.log('auth service >> token', token);
+    let payload;
+    try {
+      payload = await this.jwtService.verify(token, {
+        secret: process.env.JWT_SECRET,
+      });
+    } catch (error) {
+      throw new UnauthorizedException('wrong token');
+    }
+
+    return payload;
   }
 }

@@ -12,6 +12,7 @@ import { CreateUserDto } from '../users/dto/create-user.dto';
 import { AuthService } from './auth.service';
 import { JwtAuthGuard } from './Guards/jwt.guard';
 import { LocalAuthGuard } from './Guards/local.guard';
+import { EmailService } from 'src/email/email.service';
 
 declare global {
   interface Request extends Express.Request {
@@ -21,7 +22,10 @@ declare global {
 
 @Controller('/api/auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private readonly authService: AuthService,
+    private readonly emailService: EmailService,
+  ) {}
 
   @Post('/register')
   async register(@Body() body: CreateUserDto, @Session() session: any) {
@@ -38,6 +42,7 @@ export class AuthController {
     session.userID = user.id;
     const token = await this.authService.generateAuthToken(user.id);
     session['x-access-token'] = token;
+    await this.emailService.registerEmail(user.id, email);
     console.log('register session', session);
     user.token = token;
     return user;
