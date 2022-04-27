@@ -7,6 +7,7 @@ import {
 import { JwtService } from '@nestjs/jwt';
 import { hash, genSalt, compare } from 'bcrypt';
 import { EmailService } from 'src/email/email.service';
+import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { User, UserRole } from '../users/entities/user.entity';
 import { UsersService } from '../users/users.service';
 
@@ -17,15 +18,11 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
-  async register(
-    email: string,
-    password: string,
-    firstname: string,
-    lastname: string,
-    roles: UserRole,
-    verified: boolean,
-  ): Promise<User> {
-    const isEmailToken = await this.usersService.isEmailToken(email);
+  async register(createUserDto: CreateUserDto): Promise<User> {
+    const { password, ...rest } = createUserDto;
+    const isEmailToken = await this.usersService.isEmailToken(
+      createUserDto.email,
+    );
 
     if (isEmailToken) {
       throw new BadRequestException('email in used');
@@ -34,13 +31,10 @@ export class AuthService {
     const hashedPassword = await this.usersService.hashPassword(password);
 
     const user = await this.usersService.create({
-      email,
+      ...rest,
       password: hashedPassword,
-      firstname,
-      lastname,
-      roles,
-      verified,
     });
+
     return user;
   }
 

@@ -11,6 +11,8 @@ import { APP_GUARD } from '@nestjs/core';
 import { RolesGuard } from 'src/users/guards/roles.guard';
 import { BrandsModule } from 'src/brands/brands.module';
 import { Brand } from 'src/brands/entities/brand.entity';
+import { Guitar } from 'src/guitars/entities/guitar.entity';
+import { GuitarsModule } from 'src/guitars/guitars.module';
 
 @Module({
   imports: [
@@ -27,13 +29,14 @@ import { Brand } from 'src/brands/entities/brand.entity';
         username: config.get<string>('DATABASE_USERNAME'),
         password: config.get<string>('DATABASE_PASSWORD'),
         database: config.get<string>('DATABASE_NAME'),
-        entities: [User, Brand],
+        entities: [User, Brand, Guitar],
         synchronize: true,
       }),
     }),
     UsersModule,
     AuthModule,
     BrandsModule,
+    GuitarsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

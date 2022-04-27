@@ -13,11 +13,4 @@ export class CreateUserDto {
 
   @IsString()
   password: string;
-
-  @IsString()
-  @IsEnum(UserRole)
-  roles: UserRole;
-
-  @IsBoolean()
-  verified: boolean;
 }

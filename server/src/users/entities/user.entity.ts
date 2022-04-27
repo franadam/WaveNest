@@ -34,10 +34,10 @@ export class User {
   @Column('enum', { enum: UserRole, default: UserRole.USER })
   roles: UserRole;
 
-  @Column('text', { array: true, default: [] })
+  @Column('varchar', { array: true, default: [] })
   chart: string[];
 
-  @Column('text', { array: true, default: [] })
+  @Column('varchar', { array: true, default: [] })
   history: string[];
 
   @Column('boolean', { default: false })

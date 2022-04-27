@@ -29,20 +29,12 @@ export class AuthController {
 
   @Post('/register')
   async register(@Body() body: CreateUserDto, @Session() session: any) {
-    const { email, password, firstname, lastname, roles, verified } = body;
     console.log('body', body);
-    const user = await this.authService.register(
-      email,
-      password,
-      firstname,
-      lastname,
-      roles,
-      verified,
-    );
+    const user = await this.authService.register(body);
     session.userID = user.id;
     const token = await this.authService.generateAuthToken(user.id);
     session['x-access-token'] = token;
-    await this.emailService.registerEmail(user.id, email);
+    await this.emailService.registerEmail(user.id, user.email);
     console.log('register session', session);
     user.token = token;
     return user;
