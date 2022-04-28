@@ -1,5 +1,5 @@
-import { IsBoolean, IsNumber, IsString, Max } from 'class-validator';
-import { Brand } from 'src/brands/entities/brand.entity';
+import { IsNumber, IsString, Max } from 'class-validator';
+import { Brand } from '../../brands/entities/brand.entity';
 
 export class CreateGuitarDto {
   @IsString()

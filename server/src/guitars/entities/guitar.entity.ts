@@ -16,7 +16,7 @@ export class Guitar {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ length: 250 })
+  @Column({ unique: true, length: 250 })
   model: string;
 
   @ManyToOne(() => Brand)
