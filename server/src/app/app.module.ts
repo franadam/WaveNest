@@ -13,6 +13,8 @@ import { BrandsModule } from 'src/brands/brands.module';
 import { Brand } from 'src/brands/entities/brand.entity';
 import { Guitar } from 'src/guitars/entities/guitar.entity';
 import { GuitarsModule } from 'src/guitars/guitars.module';
+import { SitesModule } from 'src/sites/sites.module';
+import { Site } from 'src/sites/entities/site.entity';
 
 @Module({
   imports: [
@@ -29,7 +31,7 @@ import { GuitarsModule } from 'src/guitars/guitars.module';
         username: config.get<string>('DATABASE_USERNAME'),
         password: config.get<string>('DATABASE_PASSWORD'),
         database: config.get<string>('DATABASE_NAME'),
-        entities: [User, Brand, Guitar],
+        entities: [User, Brand, Guitar, Site],
         synchronize: true,
       }),
     }),
@@ -37,6 +39,7 @@ import { GuitarsModule } from 'src/guitars/guitars.module';
     AuthModule,
     BrandsModule,
     GuitarsModule,
+    SitesModule,
   ],
   controllers: [AppController],
   providers: [AppService],

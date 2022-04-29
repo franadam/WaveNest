@@ -21,6 +21,10 @@ roles
   .createAny('brands') // inherit role capabilities. also takes an array
   .updateAny('brands') // explicitly defined attributes
   .deleteAny('brands')
-  .createAny('guitars') // inherit role capabilities. also takes an array
-  .updateAny('guitars') // explicitly defined attributes
-  .deleteAny('guitars');
+  .createAny('guitars')
+  .updateAny('guitars')
+  .deleteAny('guitars')
+  .readAny('sites')
+  .createAny('sites')
+  .updateAny('sites')
+  .deleteAny('sites');
