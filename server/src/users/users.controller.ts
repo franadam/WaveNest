@@ -22,8 +22,11 @@ import { JwtAuthGuard } from 'src/auth/Guards/jwt.guard';
 import { ACGuard, UseRoles, UserRoles } from 'nest-access-control';
 import { AuthService } from 'src/auth/auth.service';
 import { EmailService } from 'src/email/email.service';
+import { Serilize } from 'src/interceptors/serialize.interceptor';
+import { UserDto } from './dto/user.dto';
 
 @Controller('/api/users')
+@Serilize(UserDto)
 export class UsersController {
   constructor(
     private readonly usersService: UsersService,
