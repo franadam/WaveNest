@@ -1,6 +1,7 @@
 import React from 'react';
 import { Footer } from 'components/Footer.component';
 import { Header } from 'components/Header.component';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import classes from './Layout.module.css';
 
 interface Props {

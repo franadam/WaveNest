@@ -1,14 +1,17 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 
 interface Props {
   type: string;
-  title: string;
-  subTitle: string;
+  title?: string;
+  subTitle?: string;
   buttonTitle: string;
   altClass?: string;
   linkTo: string;
   style?: React.CSSProperties;
+  iconSize?: string;
+  runAction?: () => void;
 }
 
 export const CustomButton: React.FC<Props> = ({
@@ -17,6 +20,8 @@ export const CustomButton: React.FC<Props> = ({
   altClass,
   linkTo,
   style,
+  iconSize,
+  runAction,
 }) => {
   let template: React.ReactElement;
   switch (type) {
@@ -27,12 +32,25 @@ export const CustomButton: React.FC<Props> = ({
           to={linkTo}
           style={{ ...style }}
         >
-          {buttonTitle}{' '}
+          {buttonTitle}
         </Link>
       );
 
       break;
 
+    case 'bag_link':
+      template = (
+        <div
+          className="bag_link"
+          onClick={() => {
+            runAction && runAction();
+          }}
+          style={{ ...style }}
+        >
+          <AddShoppingCartIcon style={{ fontSize: iconSize }} />
+        </div>
+      );
+      break;
     default:
       template = <div></div>;
   }

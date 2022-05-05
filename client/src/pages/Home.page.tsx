@@ -1,14 +1,11 @@
 import React, { useEffect } from 'react';
-import { Featured } from 'components/Featured.component';
-import { CarouselItem } from 'interfaces/Carrousel.interface';
-import { SlimPromotion } from 'components/SlimPromotion.component';
-import {
-  getGuitars,
-  getGuitarsWithParams,
-  shopping,
-} from 'store/reducers/guitars.reducer';
 import { useAppDispatch, useAppSelector } from 'hooks/use-type-selector.hook';
-import { Order } from 'interfaces/Filter.interface';
+import { getGuitars } from 'store/reducers/guitars.reducer';
+import { CarouselItem } from 'interfaces/Carrousel.interface';
+import { Featured } from 'components/Featured.component';
+import { SlimPromotion } from 'components/SlimPromotion.component';
+import { CardBlock } from 'components/CardBlock.component';
+import { Loader } from 'components/Loader.component';
 
 export const Home: React.FC = () => {
   const item: CarouselItem = {
@@ -21,23 +18,45 @@ export const Home: React.FC = () => {
 
   const dispatch = useAppDispatch();
 
-  const gu = useAppSelector((state) => state.guitars);
+  const guitars = useAppSelector((state) => state.guitars);
+  const guitarsArray = guitars.ids.map((id) => guitars.entities[id]);
+
   useEffect(() => {
-    const fil = {
-      sortBy: 'model',
-      order: Order.ASC,
-      skip: 0,
-      limit: 10,
-      price: [560, 5654],
-    };
-    dispatch(getGuitarsWithParams(fil));
+    // const fil = {
+    //   sortBy: 'model',
+    //   order: Order.ASC,
+    //   skip: 0,
+    //   limit: 10,
+    //   price: [560, 5654],
+    // };
+    dispatch(getGuitars());
   }, []);
 
   return (
     <div>
-      Home
       <Featured />
+      {guitarsArray ? (
+        <CardBlock
+          title="best selling guitars"
+          items={guitarsArray.sort((a, b) => b.itemSold - a.itemSold)}
+          shop={false}
+        />
+      ) : (
+        <Loader />
+      )}
       <SlimPromotion item={item} />
+      {guitarsArray ? (
+        <CardBlock
+          title="latest guitars"
+          items={guitarsArray.sort((a, b) => {
+            if (b.created_at < a.created_at) return 1;
+            else return 0;
+          })}
+          shop={false}
+        />
+      ) : (
+        <Loader />
+      )}
     </div>
   );
 };
