@@ -21,7 +21,7 @@ export const Home: React.FC = () => {
   const guitars = useAppSelector((state) => state.guitars);
   const guitarsArray = guitars.ids.map((id) => guitars.entities[id]);
 
-  useEffect(() => {
+  const fetchGuitars = async () => {
     // const fil = {
     //   sortBy: 'model',
     //   order: Order.ASC,
@@ -29,7 +29,14 @@ export const Home: React.FC = () => {
     //   limit: 10,
     //   price: [560, 5654],
     // };
-    dispatch(getGuitars());
+    await dispatch(getGuitars());
+    // console.log('err.error', err.error);
+    // if (getGuitars.rejected(new Error(err.error.message), 't')) {
+    // }
+  };
+
+  useEffect(() => {
+    fetchGuitars();
   }, []);
 
   return (

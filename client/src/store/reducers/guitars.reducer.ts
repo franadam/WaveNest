@@ -1,4 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { Dispatch } from 'redux';
+import { useAppDispatch } from 'hooks/use-type-selector.hook';
 import { Filter } from 'interfaces/Filter.interface';
 import { Guitar } from 'interfaces/Guitars.interface';
 import {
@@ -7,42 +9,57 @@ import {
   shopGuitars,
 } from 'services/guitars.service';
 import { normalizer } from 'utils/normalizer';
+import { errorGlobal, successGlobal } from './notifications.reducer';
 
-const initialState: {
+interface State {
   status: string;
   ids: number[];
-  // guitars: any[];
   entities: { [id: string]: Guitar };
   //error: string;
-} = {
+}
+
+const initialState: State = {
   status: 'idle',
   ids: [],
-  // guitars: [],
   entities: {},
   //error: '',
 };
+
 export const getGuitars = createAsyncThunk(
   'guitars/getAllGuitars',
-  async () => {
-    const guitars = await readGuitars();
-    return guitars;
+  async (__, thunkApi) => {
+    try {
+      const guitars = await readGuitars();
+      // thunkApi.dispatch(successGlobal('fulfilled fulfilled fulfilled'));
+      return guitars;
+    } catch (error: any) {
+      await thunkApi.dispatch(errorGlobal(error.message));
+    }
   }
 );
 
 export const getGuitarsWithParams = createAsyncThunk(
   'guitars/getGuitarsWithParams',
-  async (payload: Filter) => {
-    const guitars = await readGuitarsWithParams(payload);
-    return guitars;
+  async (payload: Filter, thunkApi) => {
+    try {
+      const guitars = await readGuitarsWithParams(payload);
+      return guitars;
+    } catch (error: any) {
+      await thunkApi.dispatch(errorGlobal(error.message));
+    }
   }
 );
 
 // need auth
 export const shopping = createAsyncThunk(
   'guitars/shopping',
-  async (payload: Filter) => {
-    const guitars = await shopGuitars(payload);
-    return guitars;
+  async (payload: Filter, thunkApi) => {
+    try {
+      const guitars = await shopGuitars(payload);
+      return guitars;
+    } catch (error: any) {
+      await thunkApi.dispatch(errorGlobal(error.message));
+    }
   }
 );
 
@@ -57,11 +74,13 @@ const guitars = createSlice({
       })
       .addCase(getGuitars.fulfilled, (state, action) => {
         state.status = 'succeeded';
-        const { ids, entities } = normalizer(action.payload);
-        state.ids = ids;
-        state.entities = entities;
+        if (action.payload) {
+          const { ids, entities } = normalizer(action.payload);
+          state.ids = ids;
+          state.entities = entities;
+        }
       })
-      .addCase(getGuitars.rejected, (state) => {
+      .addCase(getGuitars.rejected, (state, action) => {
         state.status = 'failed';
       })
       .addCase(getGuitarsWithParams.pending, (state) => {
@@ -69,9 +88,11 @@ const guitars = createSlice({
       })
       .addCase(getGuitarsWithParams.fulfilled, (state, action) => {
         state.status = 'succeeded';
-        const { ids, entities } = normalizer(action.payload);
-        state.ids = ids;
-        state.entities = entities;
+        if (action.payload) {
+          const { ids, entities } = normalizer(action.payload);
+          state.ids = ids;
+          state.entities = entities;
+        }
       })
       .addCase(getGuitarsWithParams.rejected, (state) => {
         state.status = 'failed';
@@ -81,9 +102,11 @@ const guitars = createSlice({
       })
       .addCase(shopping.fulfilled, (state, action) => {
         state.status = 'succeeded';
-        const { ids, entities } = normalizer(action.payload);
-        state.ids = ids;
-        state.entities = entities;
+        if (action.payload) {
+          const { ids, entities } = normalizer(action.payload);
+          state.ids = ids;
+          state.entities = entities;
+        }
       })
       .addCase(shopping.rejected, (state) => {
         state.status = 'failed';
