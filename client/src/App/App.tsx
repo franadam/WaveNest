@@ -7,6 +7,7 @@ import './App.css';
 import { useAppDispatch, useAppSelector } from 'hooks/use-type-selector.hook';
 import { isUserAuth } from 'store/reducers/users.reducer';
 import { Loader } from 'components/Loader.component';
+import Dashboard from 'pages/Dashboard.page';
 
 const App: React.FC = () => {
   const [formType, setFormType] = useState(true);
@@ -44,6 +45,7 @@ const App: React.FC = () => {
         </Routes>
       ) : (
         <Routes>
+          <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/" element={<Home />} />
         </Routes>
       )}
