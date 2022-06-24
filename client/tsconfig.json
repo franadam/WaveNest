@@ -22,9 +22,10 @@
     "jsx": "react-jsx",
     "noImplicitAny": true,
     "noImplicitThis": true,
-    "strictNullChecks": true
+    "strictNullChecks": true,
+    "strictFunctionTypes":false
   },
   "include": [
     "src"
-  ]
+, "../../CErrors.interface.ts"  ]
 }

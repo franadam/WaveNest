@@ -9,7 +9,7 @@ export function normalizer<T extends Normilizer>(
   entities: { [id: string]: T };
 } {
   const ids: number[] = array.map((entity) => entity.id);
-  const entities: { [id: string]: T } = {};
+  const entities: { [id: number]: T } = {};
   array.forEach((entity) => {
     entities[entity.id] = { ...entity };
   });

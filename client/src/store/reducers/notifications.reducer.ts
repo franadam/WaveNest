@@ -1,7 +1,5 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
 import { ToastType } from 'interfaces/ToastType.enum';
-import { normalizer } from 'utils/normalizer';
-import { showToast } from 'utils/notification';
 
 interface State {
   type: ToastType;

@@ -5,7 +5,7 @@ import { Guitar } from 'interfaces/Guitars.interface';
 const baseUrl = 'http://localhost:5000/api/guitars';
 
 const readGuitars = async (): Promise<Guitar[]> => {
-  const response = await axios(`${baseUrl}/lk`);
+  const response = await axios(`${baseUrl}`);
   console.log('service >> response.data', response.data);
   return response.data;
 };

@@ -11,8 +11,13 @@ export interface User {
   email: string;
   password: string;
   roles: UserRole;
-  chart: string[];
+  cart: string[];
   history: string[];
   verified: boolean;
   token: string;
+}
+
+export interface Credentials {
+  email: string;
+  password: string;
 }

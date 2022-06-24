@@ -6,6 +6,7 @@ import { Featured } from 'components/Featured.component';
 import { SlimPromotion } from 'components/SlimPromotion.component';
 import { CardBlock } from 'components/CardBlock.component';
 import { Loader } from 'components/Loader.component';
+import { getUsers } from 'store/reducers/users.reducer';
 
 export const Home: React.FC = () => {
   const item: CarouselItem = {
@@ -30,6 +31,7 @@ export const Home: React.FC = () => {
     //   price: [560, 5654],
     // };
     await dispatch(getGuitars());
+    await dispatch(getUsers());
     // console.log('err.error', err.error);
     // if (getGuitars.rejected(new Error(err.error.message), 't')) {
     // }

@@ -7,8 +7,6 @@ import { AppService } from './app.service';
 import { User } from '../users/entities/user.entity';
 import { AuthModule } from '../auth/auth.module';
 import { UsersModule } from '../users/users.module';
-import { APP_GUARD } from '@nestjs/core';
-import { RolesGuard } from 'src/users/guards/roles.guard';
 import { BrandsModule } from 'src/brands/brands.module';
 import { Brand } from 'src/brands/entities/brand.entity';
 import { Guitar } from 'src/guitars/entities/guitar.entity';

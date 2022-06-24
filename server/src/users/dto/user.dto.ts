@@ -3,6 +3,9 @@ import { UserRole } from '../users.roles';
 
 export class UserDto {
   @Expose()
+  id: number;
+
+  @Expose()
   firstname: string;
 
   @Expose()
@@ -18,7 +21,7 @@ export class UserDto {
   roles: UserRole;
 
   @Expose()
-  chart: string[];
+  cart: string[];
 
   @Expose()
   history: string[];

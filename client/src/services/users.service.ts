@@ -1,0 +1,85 @@
+import axios from 'axios';
+import { User, Credentials } from 'interfaces/Users.interface';
+
+const baseUrl = 'http://localhost:5000/api/users';
+const authUrl = 'http://localhost:5000/api/auth';
+
+const register = async (user: User): Promise<User> => {
+  const response = await axios.post(`${authUrl}/register`, user);
+  console.log('service >> response.data', response.data);
+  return response.data;
+};
+
+const login = async (credentials: Credentials): Promise<User> => {
+  axios.defaults.withCredentials = true;
+  const response = await axios.post(`${authUrl}/login`, credentials, {
+    withCredentials: true,
+  });
+  console.log('service >> response.data', response.data);
+  saveToken(response.data.token);
+  return response.data;
+};
+
+const googleLogin = async (): Promise<User> => {
+  const response = await axios(`${authUrl}/google`);
+  console.log('service >> response.data', response.data);
+  saveToken(response.data.token);
+  return response.data;
+};
+
+const logout = async (): Promise<User> => {
+  const response = await axios(`${authUrl}/logout`, {
+    headers: { Authorization: `Bearer ${getToken()}` },
+  });
+  console.log('service >> response.data', response.data);
+  removeToken();
+  return response.data;
+};
+
+const profile = async (): Promise<User> => {
+  const response = await axios(`${authUrl}/profile`);
+  return response.data;
+};
+
+const fetchUsers = async (): Promise<User[]> => {
+  const response = await axios(`${baseUrl}`);
+  return response.data;
+};
+
+const fetchToken = async (): Promise<Boolean> => {
+  axios.defaults.withCredentials = true;
+  const response = await axios(`${authUrl}/token`, { withCredentials: true });
+  console.log('service >> response.data', response.data);
+  return response.data;
+};
+
+const saveToken = (token: string): void => {
+  localStorage.setItem('authoken', token);
+};
+
+const getToken = (): string => {
+  const token = localStorage.getItem('authoken') || '';
+  console.log('token', token);
+  return token;
+};
+
+const removeToken = (): void => {
+  localStorage.removeItem('authoken');
+};
+
+const isAuth = () => {
+  return !!getToken();
+};
+
+export {
+  register,
+  login,
+  googleLogin,
+  logout,
+  profile,
+  fetchToken,
+  removeToken,
+  getToken,
+  isAuth,
+  fetchUsers,
+};

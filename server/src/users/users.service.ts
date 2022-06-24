@@ -16,7 +16,9 @@ export class UsersService {
   constructor(@InjectRepository(User) private userRepo: Repository<User>) {}
 
   async findOne(options: Partial<CreateUserDto>): Promise<User | undefined> {
-    return this.userRepo.findOne({ where: { ...options } });
+    const user = await this.userRepo.findOne({ where: { ...options } });
+    console.log('service >>user', user);
+    return user;
   }
 
   create(createUserDto: CreateUserDto) {
@@ -25,8 +27,18 @@ export class UsersService {
     return this.userRepo.save(user);
   }
 
-  findAll() {
-    return this.userRepo.find();
+  save(user: User) {
+    return this.userRepo.save(user);
+  }
+
+  clearToken(user: User) {
+    user.token = '';
+    return this.userRepo.save(user);
+  }
+
+  async findAll() {
+    const users = await this.userRepo.find();
+    return users;
   }
 
   findOneById(id: number) {

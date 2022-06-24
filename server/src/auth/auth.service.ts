@@ -3,12 +3,12 @@ import {
   Injectable,
   NotFoundException,
   UnauthorizedException,
+  Request,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { hash, genSalt, compare } from 'bcrypt';
-import { EmailService } from 'src/email/email.service';
-import { CreateUserDto } from 'src/users/dto/create-user.dto';
-import { User, UserRole } from '../users/entities/user.entity';
+import { compare } from 'bcrypt';
+import { CreateUserDto } from '../users/dto/create-user.dto';
+import { User } from '../users/entities/user.entity';
 import { UsersService } from '../users/users.service';
 
 @Injectable()
@@ -45,12 +45,36 @@ export class AuthService {
       secret: process.env.JWT_SECRET,
     });
     user.token = token;
-    return user;
+    return this.usersService.save(user);
+  }
+
+  googleLogin(req: Request) {
+    return req.user;
+  }
+
+  async googleCallback(req: Request) {
+    console.log('callback');
+    const user = await this.usersService.findOneByEmail(req.user.email);
+    return req.user;
+  }
+
+  async googleRegister(
+    // createUserDto: CreateUserDto,
+    req: Request,
+  ): Promise<User> {
+    const u: any = this.googleLogin(req);
+    const profile = u.getBasicProfile();
+    console.log('service>> profile', profile);
+    return req.user;
   }
 
   logout(user: User) {
-    user.token = '';
-    return user;
+    return this.usersService.clearToken(user);
+  }
+
+  async getAuthToken(userID: number) {
+    const user = await this.usersService.findOneById(userID);
+    return user.token;
   }
 
   async loginJWT(email: string, password: string) {

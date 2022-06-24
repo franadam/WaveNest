@@ -48,15 +48,17 @@ export class UsersController {
     possession: 'own',
   })
   @Get('/profile')
-  getProdile(@Request() req: Request, @UserRoles() userRoles: UserRole) {
-    console.log('getProdile >> req', req.headers);
+  getProfile(@Request() req: Request, @UserRoles() userRoles: UserRole) {
     console.log('userRoles', userRoles);
+    console.log('controller >> user', req.user);
     return this.usersService.findOneById(req.user.id);
   }
 
   @Get()
-  findAll() {
-    return this.usersService.findAll();
+  async findAll() {
+    const users = await this.usersService.findAll();
+    console.log('controller users', users);
+    return users;
   }
 
   @Get('/verify')

@@ -1,7 +1,20 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useAppDispatch, useAppSelector } from 'hooks/use-type-selector.hook';
 import { Link } from 'react-router-dom';
+import { isUserAuth, logoutUser } from 'store/reducers/users.reducer';
 
 export const Header: React.FC = () => {
+  const dispatch = useAppDispatch();
+  const isAuth = useAppSelector((state) => state.users.isAuth);
+
+  const logout = async () => {
+    await dispatch(logoutUser());
+  };
+
+  useEffect(() => {
+    isUserAuth();
+  }, []);
+
   return (
     <header className="bck_b_light">
       <div className="container">
@@ -16,8 +29,8 @@ export const Header: React.FC = () => {
                 <Link to={'/dashboard/user/user_cart'}> My Cart</Link>
               </div>
               <Link to={'/dashboard/'}> My Account</Link>
-              <span onClick={() => alert('logout')}>Logout</span>
-              <Link to={'/login'}> Login</Link>
+              {isAuth && <span onClick={() => logout()}>Logout</span>}
+              {!isAuth && <Link to={'/login'}> Login</Link>}
             </>
           </div>
 

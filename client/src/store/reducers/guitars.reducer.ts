@@ -1,6 +1,4 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { Dispatch } from 'redux';
-import { useAppDispatch } from 'hooks/use-type-selector.hook';
 import { Filter } from 'interfaces/Filter.interface';
 import { Guitar } from 'interfaces/Guitars.interface';
 import {

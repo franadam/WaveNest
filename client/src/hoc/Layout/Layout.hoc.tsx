@@ -6,7 +6,6 @@ import 'react-toastify/dist/ReactToastify.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import classes from './Layout.module.css';
 import { showToast } from 'utils/notification';
-import { ToastType } from 'interfaces/ToastType.enum';
 import { useAppDispatch, useAppSelector } from 'hooks/use-type-selector.hook';
 import { clearNotifications } from 'store/reducers/notifications.reducer';
 
@@ -17,9 +16,10 @@ interface Props {
 export const Layout: React.FC<Props> = ({ children }) => {
   const notifications = useAppSelector((state) => state.notifications);
   const dispatch = useAppDispatch();
+
   useEffect(() => {
-    if (notifications && notifications.type === ToastType.ERROR)
-      showToast(ToastType.ERROR, notifications.message);
+    if (notifications && notifications.message)
+      showToast(notifications.type, notifications.message);
     dispatch(clearNotifications);
   }, [notifications, dispatch]);
 
