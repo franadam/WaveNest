@@ -1,3 +1,5 @@
+import { useAppSelector } from 'hooks/use-type-selector.hook';
+import { UserRole } from 'interfaces/Users.interface';
 import React from 'react';
 import { Link } from 'react-router-dom';
 
@@ -31,14 +33,22 @@ const DashboardHoc: React.FC<Props> = ({ children, title }) => {
       </Link>
     ));
 
+  const isAdmin = useAppSelector(
+    (state) => state.users.profile.roles === UserRole.ADMIN
+  );
+
   return (
     <div className="container">
       <div className="user_container">
         <div className="user_left_nav">
           <h2>My Account</h2>
           <div className="links">{generateLinks(links)}</div>
-          <h2>Admin</h2>
-          <div className="links">{generateLinks(admin)}</div>
+          {isAdmin ? (
+            <div>
+              <h2>Admin</h2>
+              <div className="links">{generateLinks(admin)}</div>
+            </div>
+          ) : null}
         </div>
         <div className="user_right">
           <div className="dashbord_title">
