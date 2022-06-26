@@ -1,10 +1,12 @@
 import { configureStore } from '@reduxjs/toolkit';
+import authReducer from './reducers/auth.reducer';
 import guitarsReducer from './reducers/guitars.reducer';
 import notificationsReducer from './reducers/notifications.reducer';
 import usersReducer from './reducers/users.reducer';
 
 export const store = configureStore({
   reducer: {
+    auth: authReducer,
     users: usersReducer,
     guitars: guitarsReducer,
     notifications: notificationsReducer,

@@ -5,10 +5,11 @@ import { Layout } from 'hoc/Layout/Layout.hoc';
 import { Authentication } from 'pages/Authentication.page';
 import './App.css';
 import { useAppDispatch, useAppSelector } from 'hooks/use-type-selector.hook';
-import { isUserAuth } from 'store/reducers/users.reducer';
+import { isUserAuth } from 'store/reducers/auth.reducer';
 import { Loader } from 'components/Loader.component';
-import Dashboard from 'pages/Dashboard.page';
+import Dashboard from 'pages/Dashboard/Dashboard.page';
 import AuthGard from 'hoc/Auth.gard';
+import UserInfo from 'pages/Dashboard/UserInfo.page';
 
 const App: React.FC = () => {
   const [formType, setFormType] = useState(true);
@@ -27,13 +28,17 @@ const App: React.FC = () => {
     <Layout>
       <Routes>
         <Route
-          path={'/auth'}
+          path="/auth"
           element={
             <Authentication
               formType={formType}
               toggleFormType={toggleFormType}
             />
           }
+        />
+        <Route
+          path="/dashboard/user_profile"
+          element={<AuthGard ComposedComponent={UserInfo} />}
         />
         <Route
           path="/dashboard"

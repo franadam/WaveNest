@@ -10,7 +10,7 @@ interface Props {
 const AuthGard: React.FC<Props> = ({ ComposedComponent }) => {
   const AuthenticationCheck: React.FC = () => {
     const [isAuth, setIsAuth] = useState(false);
-    const userIsAuth = useAppSelector(({ users }) => users.isAuth);
+    const userIsAuth = useAppSelector(({ auth }) => auth.isAuth);
     const navigate = useNavigate();
     useEffect(() => {
       if (!userIsAuth) {

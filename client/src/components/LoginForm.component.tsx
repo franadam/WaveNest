@@ -6,7 +6,7 @@ import * as Yup from 'yup';
 import { Loader } from './Loader.component';
 import { errorsHelper } from 'utils/formik.errorsHelper';
 import { useAppDispatch, useAppSelector } from 'hooks/use-type-selector.hook';
-import { loginUser } from 'store/reducers/users.reducer';
+import { loginUser } from 'store/reducers/auth.reducer';
 import { Credentials } from 'interfaces/Users.interface';
 import { ToastType } from 'interfaces/ToastType.enum';
 import { SocialLogin } from './SocialLogin.component';
@@ -21,7 +21,7 @@ export const LoginForm: React.FC<Props> = ({ formType }) => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const notifications = useAppSelector(({ notifications }) => notifications);
-  const userIsAuth = useAppSelector(({ users }) => users.isAuth);
+  const userIsAuth = useAppSelector(({ auth }) => auth.isAuth);
 
   useEffect(() => {
     if (
@@ -62,7 +62,7 @@ export const LoginForm: React.FC<Props> = ({ formType }) => {
           <Loader />
         ) : (
           <form className="mt-3" onSubmit={formik.handleSubmit}>
-            <div className="form-group">
+            <div className="formBlock">
               <TextField
                 style={{
                   width: '100%',

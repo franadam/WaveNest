@@ -19,7 +19,7 @@ export const Home: React.FC = () => {
 
   const dispatch = useAppDispatch();
 
-  const guitars = useAppSelector((state) => state.guitars);
+  const guitars = useAppSelector(({ guitars }) => guitars);
   const guitarsArray = guitars.ids.map((id) => guitars.entities[id]);
 
   const fetchGuitars = async () => {
@@ -32,9 +32,6 @@ export const Home: React.FC = () => {
     // };
     await dispatch(getGuitars());
     await dispatch(getUsers());
-    // console.log('err.error', err.error);
-    // if (getGuitars.rejected(new Error(err.error.message), 't')) {
-    // }
   };
 
   useEffect(() => {

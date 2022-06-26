@@ -14,15 +14,15 @@ interface CustomLinks {
 }
 
 const links: CustomLinks[] = [
-  { name: 'My Account', linkTo: '/dashboar' },
-  { name: 'My Profile', linkTo: '/dashboar/user_profile' },
-  { name: 'My Cart', linkTo: '/dashboar/user_cart' },
+  { name: 'My Account', linkTo: '/dashboard' },
+  { name: 'My Profile', linkTo: '/dashboard/user_profile' },
+  { name: 'My Cart', linkTo: '/dashboard/user_cart' },
 ];
 
 const admin: CustomLinks[] = [
-  { name: 'Manage Site', linkTo: '/dashboar/admin/manage_site' },
-  { name: 'Add Products', linkTo: '/dashboar/admin/add_product' },
-  { name: 'Manage categories', linkTo: '/dashboar/admin/manage_categories' },
+  { name: 'Manage Site', linkTo: '/dashboard/admin/manage_site' },
+  { name: 'Add Products', linkTo: '/dashboard/admin/add_product' },
+  { name: 'Manage categories', linkTo: '/dashboard/admin/manage_categories' },
 ];
 
 const DashboardHoc: React.FC<Props> = ({ children, title }) => {
@@ -34,7 +34,7 @@ const DashboardHoc: React.FC<Props> = ({ children, title }) => {
     ));
 
   const isAdmin = useAppSelector(
-    (state) => state.users.profile.roles === UserRole.ADMIN
+    ({ auth }) => auth.profile.roles === UserRole.ADMIN
   );
 
   return (

@@ -6,7 +6,7 @@ import * as Yup from 'yup';
 import { Loader } from './Loader.component';
 import { errorsHelper } from 'utils/formik.errorsHelper';
 import { useAppDispatch, useAppSelector } from 'hooks/use-type-selector.hook';
-import { registerUser } from 'store/reducers/users.reducer';
+import { registerUser } from 'store/reducers/auth.reducer';
 import { User } from 'interfaces/Users.interface';
 import { ToastType } from 'interfaces/ToastType.enum';
 import { SocialLogin } from './SocialLogin.component';
@@ -70,7 +70,7 @@ export const RegisterForm: React.FC<Props> = ({ formType }) => {
         ) : (
           <form className="mt-3" onSubmit={formik.handleSubmit}>
             {Object.keys(formik.values).map((field) => (
-              <div key={field} className="form-group">
+              <div key={field} className="formBlock">
                 <TextField
                   style={{
                     width: '100%',

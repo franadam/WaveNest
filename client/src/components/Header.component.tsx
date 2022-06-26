@@ -1,11 +1,11 @@
 import React, { useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from 'hooks/use-type-selector.hook';
 import { Link } from 'react-router-dom';
-import { isUserAuth, logoutUser } from 'store/reducers/users.reducer';
+import { isUserAuth, logoutUser } from 'store/reducers/auth.reducer';
 
 export const Header: React.FC = () => {
   const dispatch = useAppDispatch();
-  const isAuth = useAppSelector((state) => state.users.isAuth);
+  const isAuth = useAppSelector(({auth}) => auth.isAuth);
 
   const logout = async () => {
     await dispatch(logoutUser());

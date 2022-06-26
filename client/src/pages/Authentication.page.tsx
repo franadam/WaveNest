@@ -1,9 +1,9 @@
 import React, { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '@mui/material';
 import { LoginForm } from 'components/LoginForm.component';
 import { RegisterForm } from 'components/RegisterForm.component';
 import { useAppSelector } from 'hooks/use-type-selector.hook';
-import { useNavigate } from 'react-router-dom';
 
 interface Props {
   formType: boolean;
@@ -14,7 +14,7 @@ export const Authentication: React.FC<Props> = ({
   formType,
   toggleFormType,
 }) => {
-  const userIsAuth = useAppSelector(({ users }) => users.isAuth);
+  const userIsAuth = useAppSelector(({ auth }) => auth.isAuth);
   const navigate = useNavigate();
 
   useEffect(() => {

@@ -37,7 +37,9 @@ const logout = async (): Promise<User> => {
 };
 
 const profile = async (): Promise<User> => {
-  const response = await axios(`${authUrl}/profile`);
+  const response = await axios(`${authUrl}/profile`, {
+    headers: { Authorization: `Bearer ${getToken()}` },
+  });
   return response.data;
 };
 
@@ -71,6 +73,11 @@ const isAuth = () => {
   return !!getToken();
 };
 
+const update = async (id:number,updates: Partial<User>) => {
+  const response = await axios.post(`${baseUrl}/${id}`, updates);
+  return response.data;
+};
+
 export {
   register,
   login,
@@ -82,4 +89,5 @@ export {
   getToken,
   isAuth,
   fetchUsers,
+update
 };
