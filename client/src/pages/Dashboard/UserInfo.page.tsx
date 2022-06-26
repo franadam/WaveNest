@@ -5,10 +5,17 @@ import DashboardHoc from 'hoc/Dashboard.hoc';
 import { useAppDispatch, useAppSelector } from 'hooks/use-type-selector.hook';
 import { errorsHelper } from 'utils/formik.errorsHelper';
 import { Button, TextField } from '@mui/material';
+import { updateProfile } from 'store/reducers/auth.reducer';
+import { User } from 'interfaces/Users.interface';
+import { useNavigate } from 'react-router-dom';
+import { ToastType } from 'interfaces/ToastType.enum';
+import { clearNotifications } from 'store/reducers/notifications.reducer';
 
 const UserInfo: React.FC = () => {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   const profile = useAppSelector(({ auth }) => auth.profile);
+  const notifications = useAppSelector(({ notifications }) => notifications);
 
   const formik = useFormik({
     enableReinitialize: true,
@@ -34,7 +41,13 @@ const UserInfo: React.FC = () => {
         .required('sorry the email is required'),
     }),
     onSubmit: (values) => {
-      console.log('values', values);
+      const id = profile.id;
+      const updates: Partial<User> = values;
+      dispatch(updateProfile({ id, updates }));
+      if (notifications && notifications.type === ToastType.SUCCESS) {
+        navigate('/dashboard', { replace: true });
+        dispatch(clearNotifications());
+      }
     },
   });
 

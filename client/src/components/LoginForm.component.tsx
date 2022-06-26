@@ -10,6 +10,7 @@ import { loginUser } from 'store/reducers/auth.reducer';
 import { Credentials } from 'interfaces/Users.interface';
 import { ToastType } from 'interfaces/ToastType.enum';
 import { SocialLogin } from './SocialLogin.component';
+import { clearNotifications } from 'store/reducers/notifications.reducer';
 
 interface Props {
   formType: boolean;
@@ -30,10 +31,11 @@ export const LoginForm: React.FC<Props> = ({ formType }) => {
       notifications.type === ToastType.SUCCESS
     ) {
       navigate('/dashboard', { replace: true });
+      dispatch(clearNotifications());
     } else {
       setIsLoading(false);
     }
-  }, [notifications, userIsAuth, navigate]);
+  }, [notifications, userIsAuth, navigate, dispatch]);
 
   const handleSubmit = async (value: Credentials) => {
     await dispatch(loginUser(value));

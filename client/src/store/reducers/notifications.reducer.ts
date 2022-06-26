@@ -2,11 +2,11 @@ import { createSlice } from '@reduxjs/toolkit';
 import { ToastType } from 'interfaces/ToastType.enum';
 
 interface State {
-  type: ToastType;
+  type: ToastType | undefined;
   message: string;
 }
 
-const initialState: State = { type: ToastType.SUCCESS, message: '' };
+const initialState: State = { type: undefined, message: '' };
 
 const notifications = createSlice({
   name: 'notifications',
@@ -21,7 +21,8 @@ const notifications = createSlice({
       state.type = ToastType.SUCCESS;
     },
     clearNotifications: (state) => {
-      state = initialState;
+      state.type = undefined;
+      state.message = '';
     },
   },
 });

@@ -62,6 +62,7 @@ export class UsersService {
     if (updateUserDto.email) {
       await this.updateEmail(id, updateUserDto.email);
     }
+    console.log('service >> userS', updateted);
     return this.userRepo.save(updateted);
   }
 

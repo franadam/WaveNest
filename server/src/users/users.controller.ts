@@ -50,14 +50,12 @@ export class UsersController {
   @Get('/profile')
   getProfile(@Request() req: Request, @UserRoles() userRoles: UserRole) {
     console.log('userRoles', userRoles);
-    console.log('controller >> user', req.user);
     return this.usersService.findOneById(req.user.id);
   }
 
   @Get()
   async findAll() {
     const users = await this.usersService.findAll();
-    console.log('controller users', users);
     return users;
   }
 
@@ -66,19 +64,23 @@ export class UsersController {
     const payload = await this.authService.validateToken(validation);
     return this.usersService.verifyAccount(payload.sub);
   }
-
-  @Get(':id')
+  @Get('/:id')
   findOne(@Param('id') id: string) {
     return this.usersService.findOneById(+id);
   }
 
-  @Patch(':id')
+  @Patch('/:id')
   update(
     @Param('id') id: string,
     @Body() updateUserDto: Partial<UpdateUserDto>,
   ) {
-    console.log('ucontroller pdateUserDto', updateUserDto);
+    console.log('controller >> updateUserDto', updateUserDto);
     return this.usersService.update(+id, updateUserDto);
+  }
+
+  @Delete('/:id')
+  remove(@Param('id') id: string) {
+    return this.usersService.remove(+id);
   }
 
   @Patch('/:id/email')
@@ -87,16 +89,12 @@ export class UsersController {
     @Body() { email }: { email: string },
     @Session() session: any,
   ) {
+    console.log('ctr email');
     const user = await this.usersService.updateEmail(+id, email);
     const token = await this.authService.generateAuthToken(+id);
     session['x-access-token'] = token;
     user.token = token;
     await this.emailService.registerEmail(user.id, user.email);
     return user;
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.usersService.remove(+id);
   }
 }

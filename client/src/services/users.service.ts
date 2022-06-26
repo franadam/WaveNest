@@ -43,11 +43,6 @@ const profile = async (): Promise<User> => {
   return response.data;
 };
 
-const fetchUsers = async (): Promise<User[]> => {
-  const response = await axios(`${baseUrl}`);
-  return response.data;
-};
-
 const fetchToken = async (): Promise<Boolean> => {
   axios.defaults.withCredentials = true;
   const response = await axios(`${authUrl}/token`, { withCredentials: true });
@@ -73,8 +68,13 @@ const isAuth = () => {
   return !!getToken();
 };
 
-const update = async (id:number,updates: Partial<User>) => {
-  const response = await axios.post(`${baseUrl}/${id}`, updates);
+const fetchUsers = async (): Promise<User[]> => {
+  const response = await axios(`${baseUrl}`);
+  return response.data;
+};
+
+const update = async (id: number, updates: Partial<User>) => {
+  const response = await axios.patch(`${baseUrl}/${id}`, updates);
   return response.data;
 };
 
@@ -89,5 +89,5 @@ export {
   getToken,
   isAuth,
   fetchUsers,
-update
+  update,
 };

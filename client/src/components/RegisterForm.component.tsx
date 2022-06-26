@@ -10,6 +10,7 @@ import { registerUser } from 'store/reducers/auth.reducer';
 import { User } from 'interfaces/Users.interface';
 import { ToastType } from 'interfaces/ToastType.enum';
 import { SocialLogin } from './SocialLogin.component';
+import { clearNotifications } from 'store/reducers/notifications.reducer';
 
 interface Props {
   formType: boolean;
@@ -27,10 +28,11 @@ export const RegisterForm: React.FC<Props> = ({ formType }) => {
   useEffect(() => {
     if (notifications && notifications.type === ToastType.SUCCESS) {
       navigate('/auth', { replace: true });
+      dispatch(clearNotifications());
     } else {
       setIsLoading(false);
     }
-  }, [notifications, navigate]);
+  }, [notifications, navigate, dispatch]);
 
   const handleSubmit = async (value: Partial<User>) => {
     // event.preventDefault();

@@ -18,7 +18,7 @@ export const Layout: React.FC<Props> = ({ children }) => {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    if (notifications && notifications.message)
+    if (notifications && notifications.message && notifications.type)
       showToast(notifications.type, notifications.message);
     dispatch(clearNotifications);
   }, [notifications, dispatch]);

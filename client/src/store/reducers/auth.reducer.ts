@@ -7,8 +7,14 @@ import {
   profile,
   register,
   isAuth,
+  update,
 } from 'services/users.service';
-import { errorGlobal, successGlobal } from './notifications.reducer';
+import { AppDispatch, RootState } from 'store/store';
+import {
+  clearNotifications,
+  errorGlobal,
+  successGlobal,
+} from './notifications.reducer';
 
 interface State {
   status: string;
@@ -56,6 +62,7 @@ export const loginUser = createAsyncThunk(
   async (credentials: Credentials, thunkApi) => {
     try {
       const user = await login(credentials);
+
       await thunkApi.dispatch(successGlobal(`Welcome ${user.firstname}`));
       return user;
     } catch (error: any) {
@@ -69,6 +76,7 @@ export const logoutUser = createAsyncThunk(
   async (_, thunkApi) => {
     try {
       const user = await logout();
+
       await thunkApi.dispatch(successGlobal(`Goodby ${user.firstname}`));
       return user;
     } catch (error: any) {
@@ -82,6 +90,7 @@ export const googleLoginUser = createAsyncThunk(
   async (_, thunkApi) => {
     try {
       const user = await googleLogin();
+
       await thunkApi.dispatch(successGlobal(`Welcome ${user.firstname}`));
       return user;
     } catch (error: any) {
@@ -95,7 +104,9 @@ export const getProfile = createAsyncThunk(
   async (_, thunkApi) => {
     try {
       const user = await profile();
+
       await thunkApi.dispatch(successGlobal(`Welcome ${user.firstname}`));
+
       return user;
     } catch (error: any) {
       await thunkApi.dispatch(errorGlobal(error.message));
@@ -116,6 +127,31 @@ export const isUserAuth = createAsyncThunk(
   }
 );
 
+export const updateProfile = createAsyncThunk(
+  'auth/updateProfile',
+  async ({ id, updates }: { id: number; updates: Partial<User> }, thunkApi) => {
+    try {
+      const { email, ...rest } = updates;
+      const st = thunkApi.getState() as RootState;
+      console.log('auth reducer >> state', st);
+
+      const profile =
+        st.auth.profile.email === email
+          ? await update(id, rest)
+          : await update(id, updates);
+      await thunkApi.dispatch(successGlobal('profile updated'));
+      console.log('reducer profile', profile);
+      return profile;
+    } catch (error: any) {
+      await thunkApi.dispatch(errorGlobal(error.message));
+    }
+  }
+);
+
+const updateProfileHelper = (field: string, state: any, action: any) => {
+  return action.payload[field] ? action.payload[field] : state.profile[field];
+};
+
 const authSlice = createSlice({
   name: 'auth',
   initialState,
@@ -131,6 +167,7 @@ const authSlice = createSlice({
           state.profile.lastname = action.payload.lastname;
           state.profile.username = action.payload.username;
           state.profile.password = action.payload.password;
+          state.profile.id = action.payload.id;
           state.profile.email = action.payload.email;
           state.profile.token = action.payload.token;
           state.profile.history = action.payload.history;
@@ -150,6 +187,7 @@ const authSlice = createSlice({
         if (action.payload) {
           state.profile.firstname = action.payload.firstname;
           state.isAuth = true;
+          state.profile.id = action.payload.id;
           state.profile.lastname = action.payload.lastname;
           state.profile.username = action.payload.username;
           state.profile.password = action.payload.password;
@@ -171,6 +209,7 @@ const authSlice = createSlice({
       .addCase(googleLoginUser.fulfilled, (state, action) => {
         if (action.payload) {
           state.profile.firstname = action.payload.firstname;
+          state.profile.id = action.payload.id;
           state.profile.lastname = action.payload.lastname;
           state.profile.username = action.payload.username;
           state.profile.password = action.payload.password;
@@ -197,6 +236,7 @@ const authSlice = createSlice({
           state.profile.lastname = '';
           state.profile.username = '';
           state.profile.password = '';
+          state.profile.id = action.payload.id;
           state.profile.email = '';
           state.profile.token = '';
           state.profile.history = [];
@@ -227,6 +267,7 @@ const authSlice = createSlice({
           state.profile.lastname = action.payload.lastname;
           state.profile.username = action.payload.username;
           state.profile.password = action.payload.password;
+          state.profile.id = action.payload.id;
           state.profile.email = action.payload.email;
           state.profile.token = action.payload.token;
           state.profile.history = action.payload.history;
@@ -237,6 +278,47 @@ const authSlice = createSlice({
         }
       })
       .addCase(getProfile.rejected, (state) => {
+        state.status = 'failed';
+      })
+      .addCase(updateProfile.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(updateProfile.fulfilled, (state, action) => {
+        if (action.payload) {
+          state.profile.firstname = updateProfileHelper(
+            'firstname',
+            state,
+            action
+          );
+          state.profile.lastname = updateProfileHelper(
+            'lastname',
+            state,
+            action
+          );
+          state.profile.username = updateProfileHelper(
+            'username',
+            state,
+            action
+          );
+          state.profile.password = updateProfileHelper(
+            'password',
+            state,
+            action
+          );
+          state.profile.email = updateProfileHelper('email', state, action);
+          state.profile.token = updateProfileHelper('token', state, action);
+          state.profile.history = updateProfileHelper('history', state, action);
+          state.profile.cart = updateProfileHelper('cart', state, action);
+          state.profile.verified = updateProfileHelper(
+            'verified',
+            state,
+            action
+          );
+          state.profile.roles = updateProfileHelper('roles', state, action);
+          state.status = 'succeeded';
+        }
+      })
+      .addCase(updateProfile.rejected, (state) => {
         state.status = 'failed';
       });
   },

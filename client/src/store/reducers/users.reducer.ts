@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { User, UserRole } from 'interfaces/Users.interface';
+import { User } from 'interfaces/Users.interface';
 import { fetchUsers } from 'services/users.service';
 import { normalizer } from 'utils/normalizer';
 import { errorGlobal, successGlobal } from './notifications.reducer';
