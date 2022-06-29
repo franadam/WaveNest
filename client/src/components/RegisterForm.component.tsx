@@ -12,13 +12,8 @@ import { ToastType } from 'interfaces/ToastType.enum';
 import { SocialLogin } from './SocialLogin.component';
 import { clearNotifications } from 'store/reducers/notifications.reducer';
 
-interface Props {
-  formType: boolean;
-}
-
-export const RegisterForm: React.FC<Props> = ({ formType }) => {
+export const RegisterForm: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
-  // const [isSocialLogin, setIsSocialLogin] = useState(false);
 
   const dispatch = useAppDispatch();
   const notifications = useAppSelector(({ notifications }) => notifications);
@@ -97,7 +92,7 @@ export const RegisterForm: React.FC<Props> = ({ formType }) => {
               color="primary"
               size="small"
             >
-              {formType ? 'Register' : 'Login'}
+              Register
             </Button>
           </form>
         )}

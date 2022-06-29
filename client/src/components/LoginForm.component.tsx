@@ -12,11 +12,7 @@ import { ToastType } from 'interfaces/ToastType.enum';
 import { SocialLogin } from './SocialLogin.component';
 import { clearNotifications } from 'store/reducers/notifications.reducer';
 
-interface Props {
-  formType: boolean;
-}
-
-export const LoginForm: React.FC<Props> = ({ formType }) => {
+export const LoginForm: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const dispatch = useAppDispatch();
@@ -95,7 +91,7 @@ export const LoginForm: React.FC<Props> = ({ formType }) => {
               color="primary"
               size="small"
             >
-              {formType ? 'Register' : 'Login'}
+              Login
             </Button>
           </form>
         )}
