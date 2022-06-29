@@ -20,7 +20,6 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
     email: string,
     password: string,
   ): Promise<User> {
-    console.log('local strategy validate>>email', email);
     const contextId = ContextIdFactory.getByRequest(request);
     const authService = await this.moduleRef.resolve(AuthService, contextId);
     const user = await authService.validateUser(email, password);

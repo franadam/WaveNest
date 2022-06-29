@@ -10,6 +10,7 @@ import { User } from 'interfaces/Users.interface';
 import { useNavigate } from 'react-router-dom';
 import { ToastType } from 'interfaces/ToastType.enum';
 import { clearNotifications } from 'store/reducers/notifications.reducer';
+import EmailStepper from 'components/Stepper.component';
 
 const UserInfo: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -23,7 +24,6 @@ const UserInfo: React.FC = () => {
       firstname: profile.firstname,
       lastname: profile.lastname,
       username: profile.username,
-      email: profile.email,
     },
     validationSchema: Yup.object({
       firstname: Yup.string()
@@ -35,10 +35,6 @@ const UserInfo: React.FC = () => {
         .max(30, '30 char max')
         .required('sorry the lastname is required'),
       username: Yup.string().min(5, '5 char min').max(30, '10 char max'),
-      email: Yup.string()
-        .min(5, '5 char min')
-        .max(30, '30 char max')
-        .required('sorry the email is required'),
     }),
     onSubmit: (values) => {
       const id = profile.id;
@@ -82,6 +78,10 @@ const UserInfo: React.FC = () => {
           Edit Profile
         </Button>
       </form>
+      <hr />
+      <div>
+        <EmailStepper />
+      </div>
     </DashboardHoc>
   );
 };

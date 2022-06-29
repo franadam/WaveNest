@@ -5,7 +5,7 @@ import { isUserAuth, logoutUser } from 'store/reducers/auth.reducer';
 
 export const Header: React.FC = () => {
   const dispatch = useAppDispatch();
-  const isAuth = useAppSelector(({auth}) => auth.isAuth);
+  const isAuth = useAppSelector(({ auth }) => auth.isAuth);
 
   const logout = async () => {
     await dispatch(logoutUser());
@@ -30,7 +30,7 @@ export const Header: React.FC = () => {
               </div>
               <Link to={'/dashboard/'}> My Account</Link>
               {isAuth && <span onClick={() => logout()}>Logout</span>}
-              {!isAuth && <Link to={'/login'}> Login</Link>}
+              {!isAuth && <Link to={'/auth'}> Login</Link>}
             </>
           </div>
 

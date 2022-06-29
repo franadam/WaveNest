@@ -55,7 +55,7 @@ export const RegisterForm: React.FC<Props> = ({ formType }) => {
       password: Yup.string().required('you must provide a password'),
       firstname: Yup.string().required(),
       lastname: Yup.string().required(),
-      username: Yup.string().required(),
+      username: Yup.string(),
     }),
     onSubmit: (value) => {
       setIsLoading(true);
@@ -77,9 +77,14 @@ export const RegisterForm: React.FC<Props> = ({ formType }) => {
                   style={{
                     width: '100%',
                   }}
-                  // name="password"
                   label={`Enter your ${field}`}
-                  type={field === 'password' ? 'password' : 'text'}
+                  type={
+                    field === 'password'
+                      ? 'password'
+                      : field === 'email'
+                      ? 'email'
+                      : 'text'
+                  }
                   variant="outlined"
                   {...formik.getFieldProps(field)}
                   {...errorsHelper(formik, field)}

@@ -8,6 +8,7 @@ import {
   register,
   isAuth,
   update,
+  updateEmail,
 } from 'services/users.service';
 import { AppDispatch, RootState } from 'store/store';
 import {
@@ -142,6 +143,19 @@ export const updateProfile = createAsyncThunk(
       await thunkApi.dispatch(successGlobal('profile updated'));
       console.log('reducer profile', profile);
       return profile;
+    } catch (error: any) {
+      await thunkApi.dispatch(errorGlobal(error.message));
+    }
+  }
+);
+
+export const updateProfileEmail = createAsyncThunk(
+  'auth/updateProfileEmail',
+  async ({ id, email }: { id: number; email: string }, thunkApi) => {
+    try {
+      const user = await updateEmail(id, email);
+      await thunkApi.dispatch(successGlobal('profile updated'));
+      return user;
     } catch (error: any) {
       await thunkApi.dispatch(errorGlobal(error.message));
     }
@@ -319,6 +333,18 @@ const authSlice = createSlice({
         }
       })
       .addCase(updateProfile.rejected, (state) => {
+        state.status = 'failed';
+      })
+      .addCase(updateProfileEmail.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(updateProfileEmail.fulfilled, (state, action) => {
+        if (action.payload) {
+          state.profile.email = action.payload.email;
+          state.status = 'succeeded';
+        }
+      })
+      .addCase(updateProfileEmail.rejected, (state) => {
         state.status = 'failed';
       });
   },

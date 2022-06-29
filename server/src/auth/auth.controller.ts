@@ -30,14 +30,12 @@ export class AuthController {
 
   @Post('/register')
   async register(@Body() body: CreateUserDto, @Session() session: any) {
-    console.log('body', body);
     const user = await this.authService.register(body);
     session.userID = user.id;
     const token = await this.authService.generateAuthToken(user.id);
     session['x-access-token'] = token;
     session.b = token;
     await this.emailService.registerEmail(user.id, user.email);
-    console.log('register session', session);
     user.token = token;
     return user;
   }
@@ -76,7 +74,6 @@ export class AuthController {
   @UseGuards(JwtAuthGuard)
   @Get('/profile')
   getProfile(@Request() req: Request) {
-    console.log('profile', Object.keys(req));
     return req.user;
   }
 

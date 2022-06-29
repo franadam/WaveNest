@@ -78,6 +78,13 @@ const update = async (id: number, updates: Partial<User>) => {
   return response.data;
 };
 
+const updateEmail = async (id: number, email: string) => {
+  const response = await axios.patch(`${baseUrl}/${id}/email`, email);
+  console.log('service user', response.data);
+  saveToken(response.data.token);
+  return response.data;
+};
+
 export {
   register,
   login,
@@ -90,4 +97,5 @@ export {
   isAuth,
   fetchUsers,
   update,
+  updateEmail,
 };

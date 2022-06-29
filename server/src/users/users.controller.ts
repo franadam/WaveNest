@@ -86,15 +86,16 @@ export class UsersController {
   @Patch('/:id/email')
   async updateEmail(
     @Param('id') id: string,
-    @Body() { email }: { email: string },
+    @Body() body: any,
     @Session() session: any,
   ) {
-    console.log('ctr email');
-    const user = await this.usersService.updateEmail(+id, email);
+    const user = await this.usersService.updateEmail(+id, Object.keys(body)[0]);
     const token = await this.authService.generateAuthToken(+id);
     session['x-access-token'] = token;
     user.token = token;
+    const updated = await this.usersService.save(user);
+    console.log('ctr user>> updated', updated);
     await this.emailService.registerEmail(user.id, user.email);
-    return user;
+    return updated;
   }
 }

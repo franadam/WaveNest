@@ -22,7 +22,6 @@ export class GoogleStrategy extends PassportStrategy(Strategy) {
     done: VerifyCallback,
   ): Promise<any> {
     const { name, emails, photos } = profile;
-    console.log('google strategy >> profile', profile);
     // user.token = accessToken;
     // const user = await this.usersService.findOneByEmail(emails[0].value);
     const user = {

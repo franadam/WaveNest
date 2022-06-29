@@ -28,4 +28,7 @@ export class UserDto {
 
   @Expose()
   verified: boolean;
+
+  @Expose()
+  token: string;
 }
