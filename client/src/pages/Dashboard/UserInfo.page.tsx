@@ -1,7 +1,7 @@
 import React from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import DashboardHoc from 'hoc/Dashboard.hoc';
+import { DashboardHoc } from 'hoc/Dashboard.hoc';
 import { useAppDispatch, useAppSelector } from 'hooks/use-type-selector.hook';
 import { errorsHelper } from 'utils/formik.errorsHelper';
 import { Button, TextField } from '@mui/material';
@@ -10,9 +10,9 @@ import { User } from 'interfaces/Users.interface';
 import { useNavigate } from 'react-router-dom';
 import { ToastType } from 'interfaces/ToastType.enum';
 import { clearNotifications } from 'store/reducers/notifications.reducer';
-import EmailStepper from 'components/Stepper.component';
+import { EmailStepper } from 'components/Stepper.component';
 
-const UserInfo: React.FC = () => {
+export const UserInfo: React.FC = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const profile = useAppSelector(({ auth }) => auth.profile);

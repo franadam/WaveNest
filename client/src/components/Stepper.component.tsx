@@ -10,7 +10,7 @@ import { updateProfileEmail } from 'store/reducers/auth.reducer';
 import { clearNotifications } from 'store/reducers/notifications.reducer';
 import { ToastType } from 'interfaces/ToastType.enum';
 
-const EmailStepper: React.FC = () => {
+export const EmailStepper: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [activeStep, setActiveStep] = useState(0);
@@ -192,5 +192,3 @@ const EmailStepper: React.FC = () => {
     </>
   );
 };
-
-export default EmailStepper;

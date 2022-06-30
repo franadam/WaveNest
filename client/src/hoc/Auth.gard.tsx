@@ -7,7 +7,7 @@ interface Props {
   ComposedComponent: React.FC;
 }
 
-const AuthGard: React.FC<Props> = ({ ComposedComponent }) => {
+export const AuthGard: React.FC<Props> = ({ ComposedComponent }) => {
   const AuthenticationCheck: React.FC = () => {
     const [isAuth, setIsAuth] = useState(false);
     const userIsAuth = useAppSelector(({ auth }) => auth.isAuth);
@@ -24,5 +24,3 @@ const AuthGard: React.FC<Props> = ({ ComposedComponent }) => {
 
   return <AuthenticationCheck />;
 };
-
-export default AuthGard;

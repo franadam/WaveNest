@@ -30,7 +30,7 @@ export const Header: React.FC = () => {
               </div>
               <Link to={'/dashboard/'}> My Account</Link>
               {isAuth && <span onClick={() => logout()}>Logout</span>}
-              {!isAuth && <Link to={'/auth'}> Login</Link>}
+              {!isAuth && <Link to={'/auth/login'}> Login</Link>}
             </>
           </div>
 

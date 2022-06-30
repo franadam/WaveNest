@@ -28,9 +28,7 @@ const googleLogin = async (): Promise<User> => {
 };
 
 const logout = async (): Promise<User> => {
-  const response = await axios(`${authUrl}/logout`, {
-    headers: { Authorization: `Bearer ${getToken()}` },
-  });
+  const response = await axios(`${authUrl}/logout`);
   console.log('service >> response.data', response.data);
   removeToken();
   return response.data;

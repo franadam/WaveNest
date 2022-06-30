@@ -10,12 +10,9 @@ import {
   update,
   updateEmail,
 } from 'services/users.service';
-import { AppDispatch, RootState } from 'store/store';
-import {
-  clearNotifications,
-  errorGlobal,
-  successGlobal,
-} from './notifications.reducer';
+import { RootState } from 'store/store';
+import { customError } from 'utils/customError';
+import { errorGlobal, successGlobal } from './notifications.reducer';
 
 interface State {
   status: string;
@@ -52,7 +49,8 @@ export const registerUser = createAsyncThunk(
         )
       );
       return user;
-    } catch (error: any) {
+    } catch (err: any) {
+      const error = customError(err.response.data);
       await thunkApi.dispatch(errorGlobal(error.message));
     }
   }
@@ -66,7 +64,8 @@ export const loginUser = createAsyncThunk(
 
       await thunkApi.dispatch(successGlobal(`Welcome ${user.firstname}`));
       return user;
-    } catch (error: any) {
+    } catch (err: any) {
+      const error = customError(err.response.data);
       await thunkApi.dispatch(errorGlobal(error.message));
     }
   }
@@ -80,7 +79,8 @@ export const logoutUser = createAsyncThunk(
 
       await thunkApi.dispatch(successGlobal(`Goodby ${user.firstname}`));
       return user;
-    } catch (error: any) {
+    } catch (err: any) {
+      const error = customError(err.response.data);
       await thunkApi.dispatch(errorGlobal(error.message));
     }
   }
@@ -94,7 +94,8 @@ export const googleLoginUser = createAsyncThunk(
 
       await thunkApi.dispatch(successGlobal(`Welcome ${user.firstname}`));
       return user;
-    } catch (error: any) {
+    } catch (err: any) {
+      const error = customError(err.response.data);
       await thunkApi.dispatch(errorGlobal(error.message));
     }
   }
@@ -109,7 +110,8 @@ export const getProfile = createAsyncThunk(
       await thunkApi.dispatch(successGlobal(`Welcome ${user.firstname}`));
 
       return user;
-    } catch (error: any) {
+    } catch (err: any) {
+      const error = customError(err.response.data);
       await thunkApi.dispatch(errorGlobal(error.message));
     }
   }
@@ -122,7 +124,8 @@ export const isUserAuth = createAsyncThunk(
       const isLogged = isAuth();
       if (isLogged) await thunkApi.dispatch(getProfile());
       return isLogged;
-    } catch (error: any) {
+    } catch (err: any) {
+      const error = customError(err.response.data);
       await thunkApi.dispatch(errorGlobal(error.message));
     }
   }
@@ -143,7 +146,8 @@ export const updateProfile = createAsyncThunk(
       await thunkApi.dispatch(successGlobal('profile updated'));
       console.log('reducer profile', profile);
       return profile;
-    } catch (error: any) {
+    } catch (err: any) {
+      const error = customError(err.response.data);
       await thunkApi.dispatch(errorGlobal(error.message));
     }
   }
@@ -156,7 +160,8 @@ export const updateProfileEmail = createAsyncThunk(
       const user = await updateEmail(id, email);
       await thunkApi.dispatch(successGlobal('profile updated'));
       return user;
-    } catch (error: any) {
+    } catch (err: any) {
+      const error = customError(err.response.data);
       await thunkApi.dispatch(errorGlobal(error.message));
     }
   }
@@ -350,6 +355,6 @@ const authSlice = createSlice({
   },
 });
 
-export const {} = authSlice.actions;
+// export const {} = authSlice.actions;
 
 export default authSlice.reducer;

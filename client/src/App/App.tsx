@@ -1,18 +1,17 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { Home } from 'pages/Home.page';
 import { Layout } from 'hoc/Layout/Layout.hoc';
 import './App.css';
-import { useAppDispatch, useAppSelector } from 'hooks/use-type-selector.hook';
+import { useAppDispatch } from 'hooks/use-type-selector.hook';
 import { isUserAuth } from 'store/reducers/auth.reducer';
-import { Loader } from 'components/Loader.component';
-import Dashboard from 'pages/Dashboard/Dashboard.page';
-import AuthGard from 'hoc/Auth.gard';
-import UserInfo from 'pages/Dashboard/UserInfo.page';
+import { Dashboard } from 'pages/Dashboard/Dashboard.page';
+import { AuthGard } from 'hoc/Auth.gard';
+import { UserInfo } from 'pages/Dashboard/UserInfo.page';
 import { Register } from 'pages/Register.page';
 import { Login } from 'pages/Login.page';
 
-const App: React.FC = () => {
+export const App: React.FC = () => {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
@@ -37,5 +36,3 @@ const App: React.FC = () => {
     </Layout>
   );
 };
-
-export default App;

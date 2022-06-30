@@ -25,7 +25,7 @@ const admin: CustomLinks[] = [
   { name: 'Manage categories', linkTo: '/dashboard/admin/manage_categories' },
 ];
 
-const DashboardHoc: React.FC<Props> = ({ children, title }) => {
+export const DashboardHoc: React.FC<Props> = ({ children, title }) => {
   const generateLinks = (links: CustomLinks[]) =>
     links.map((item, idx) => (
       <Link to={item.linkTo} key={`${item.name}${idx}`}>
@@ -60,5 +60,3 @@ const DashboardHoc: React.FC<Props> = ({ children, title }) => {
     </div>
   );
 };
-
-export default DashboardHoc;

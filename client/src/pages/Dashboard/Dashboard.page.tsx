@@ -1,8 +1,8 @@
-import DashboardHoc from 'hoc/Dashboard.hoc';
-import { useAppSelector } from 'hooks/use-type-selector.hook';
 import React from 'react';
+import { DashboardHoc } from 'hoc/Dashboard.hoc';
+import { useAppSelector } from 'hooks/use-type-selector.hook';
 
-const Dashboard: React.FC = () => {
+export const Dashboard: React.FC = () => {
   const profile = useAppSelector(({ auth }) => auth.profile);
 
   return (
@@ -23,5 +23,3 @@ const Dashboard: React.FC = () => {
     </DashboardHoc>
   );
 };
-
-export default Dashboard;
