@@ -8,6 +8,7 @@ import {
   Delete,
   UseGuards,
   Query,
+  Request,
 } from '@nestjs/common';
 import { GuitarsService } from './guitars.service';
 import { CreateGuitarDto } from './dto/create-guitar.dto';
@@ -65,7 +66,8 @@ export class GuitarsController {
     possession: 'any',
   })
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  remove(@Param('id') id: string, @Request() req: Request) {
+    console.log('controller >> guittar', req.user);
     return this.guitarsService.remove(+id);
   }
 }

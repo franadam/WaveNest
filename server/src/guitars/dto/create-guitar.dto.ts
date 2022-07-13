@@ -22,6 +22,6 @@ export class CreateGuitarDto {
   available: number;
 
   @IsNumber()
-  @Max(5550)
+  @Max(959800)
   price: number;
 }

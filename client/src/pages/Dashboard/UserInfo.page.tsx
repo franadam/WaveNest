@@ -40,7 +40,7 @@ export const UserInfo: React.FC = () => {
       const id = profile.id;
       const updates: Partial<User> = values;
       dispatch(updateProfile({ id, updates }));
-      if (notifications && notifications.type === ToastType.SUCCESS) {
+      if (notifications && notifications.type === ToastType.UPDATE_SUCCESS) {
         navigate('/dashboard', { replace: true });
         dispatch(clearNotifications());
       }

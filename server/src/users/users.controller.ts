@@ -59,6 +59,12 @@ export class UsersController {
     return users;
   }
 
+  @UseGuards(JwtAuthGuard, ACGuard)
+  @UseRoles({
+    resource: 'profile',
+    action: 'read',
+    possession: 'own',
+  })
   @Get('/verify')
   async verifyAccount(@Query() { validation }: { validation: string }) {
     const payload = await this.authService.validateToken(validation);
@@ -69,6 +75,12 @@ export class UsersController {
     return this.usersService.findOneById(+id);
   }
 
+  @UseGuards(JwtAuthGuard, ACGuard)
+  @UseRoles({
+    resource: 'profile',
+    action: 'update',
+    possession: 'own',
+  })
   @Patch('/:id')
   update(
     @Param('id') id: string,
@@ -78,11 +90,23 @@ export class UsersController {
     return this.usersService.update(+id, updateUserDto);
   }
 
+  @UseGuards(JwtAuthGuard, ACGuard)
+  @UseRoles({
+    resource: 'profile',
+    action: 'delete',
+    possession: 'any',
+  })
   @Delete('/:id')
   remove(@Param('id') id: string) {
     return this.usersService.remove(+id);
   }
 
+  @UseGuards(JwtAuthGuard, ACGuard)
+  @UseRoles({
+    resource: 'profile',
+    action: 'update',
+    possession: 'own',
+  })
   @Patch('/:id/email')
   async updateEmail(
     @Param('id') id: string,

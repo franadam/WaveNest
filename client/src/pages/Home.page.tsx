@@ -1,12 +1,11 @@
 import React, { useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from 'hooks/use-type-selector.hook';
-import { getGuitars } from 'store/reducers/guitars.reducer';
+import { getGuitars, selectAllGuitars } from 'store/reducers/guitars.reducer';
 import { CarouselItem } from 'interfaces/Carrousel.interface';
 import { Featured } from 'components/Featured.component';
 import { SlimPromotion } from 'components/SlimPromotion.component';
 import { CardBlock } from 'components/CardBlock.component';
 import { Loader } from 'components/Loader.component';
-import { getUsers } from 'store/reducers/users.reducer';
 
 export const Home: React.FC = () => {
   const item: CarouselItem = {
@@ -19,19 +18,10 @@ export const Home: React.FC = () => {
 
   const dispatch = useAppDispatch();
 
-  const guitars = useAppSelector(({ guitars }) => guitars);
-  const guitarsArray = guitars.ids.map((id) => guitars.entities[id]);
+  const allGuitars = useAppSelector((state) => selectAllGuitars(state));
 
   const fetchGuitars = async () => {
-    // const fil = {
-    //   sortBy: 'model',
-    //   order: Order.ASC,
-    //   skip: 0,
-    //   limit: 10,
-    //   price: [560, 5654],
-    // };
     await dispatch(getGuitars());
-    await dispatch(getUsers());
   };
 
   useEffect(() => {
@@ -41,20 +31,20 @@ export const Home: React.FC = () => {
   return (
     <div>
       <Featured />
-      {guitarsArray ? (
+      {allGuitars ? (
         <CardBlock
           title="best selling guitars"
-          items={guitarsArray.sort((a, b) => b.itemSold - a.itemSold)}
+          items={allGuitars.sort((a, b) => b.itemSold - a.itemSold)}
           shop={false}
         />
       ) : (
         <Loader />
       )}
       <SlimPromotion item={item} />
-      {guitarsArray ? (
+      {allGuitars ? (
         <CardBlock
           title="latest guitars"
-          items={guitarsArray.sort((a, b) => {
+          items={allGuitars.sort((a, b) => {
             if (b.created_at < a.created_at) return 1;
             else return 0;
           })}

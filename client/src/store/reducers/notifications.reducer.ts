@@ -13,12 +13,12 @@ const notifications = createSlice({
   initialState,
   reducers: {
     errorGlobal: (state, action) => {
-      state.message = action.payload;
+      state.message = action.payload.message;
       state.type = ToastType.ERROR;
     },
     successGlobal: (state, action) => {
-      state.message = action.payload;
-      state.type = ToastType.SUCCESS;
+      state.message = action.payload.message;
+      state.type = action.payload.type;
     },
     clearNotifications: (state) => {
       state.type = undefined;

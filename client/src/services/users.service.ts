@@ -28,7 +28,9 @@ const googleLogin = async (): Promise<User> => {
 };
 
 const logout = async (): Promise<User> => {
-  const response = await axios(`${authUrl}/logout`);
+  const response = await axios(`${authUrl}/logout`, {
+    headers: { Authorization: `Bearer ${getToken()}` },
+  });
   console.log('service >> response.data', response.data);
   removeToken();
   return response.data;
@@ -72,12 +74,16 @@ const fetchUsers = async (): Promise<User[]> => {
 };
 
 const update = async (id: number, updates: Partial<User>) => {
-  const response = await axios.patch(`${baseUrl}/${id}`, updates);
+  const response = await axios.patch(`${baseUrl}/${id}`, updates, {
+    headers: { Authorization: `Bearer ${getToken()}` },
+  });
   return response.data;
 };
 
 const updateEmail = async (id: number, email: string) => {
-  const response = await axios.patch(`${baseUrl}/${id}/email`, email);
+  const response = await axios.patch(`${baseUrl}/${id}/email`, email, {
+    headers: { Authorization: `Bearer ${getToken()}` },
+  });
   console.log('service user', response.data);
   saveToken(response.data.token);
   return response.data;

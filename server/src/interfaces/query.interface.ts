@@ -5,9 +5,23 @@ export interface QueryInt {
   sortBy: string;
   limit: string;
   skip: string;
-  price?: number[] | string[];
+}
+
+export interface Shopping {
+  model: string;
+  brand: string;
+  frets: number;
+  wood: string;
+  description: string;
+  price: number[] | string[];
+  available: number;
+  itemSold: number;
+  shipping: boolean;
+  images: boolean;
 }
 
 export interface BodyInt {
-  filters: QueryInt;
+  filters: Filter;
 }
+
+export interface Filter extends QueryInt, Shopping {}

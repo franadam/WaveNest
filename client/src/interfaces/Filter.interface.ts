@@ -3,10 +3,24 @@ export enum Order {
   DESC = 'DESC',
 }
 
-export interface Filter {
+export interface Query {
   order: Order;
   sortBy: string;
   limit: number;
   skip: number;
-  price?: number[] | string[];
 }
+
+export interface Shopping {
+  model: string;
+  brand: string;
+  frets: number;
+  wood: string;
+  description: string;
+  price: number[] | string[];
+  available: number;
+  itemSold: number;
+  shipping: boolean;
+  images: boolean;
+}
+
+export interface Filter extends Query, Shopping {}

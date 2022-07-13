@@ -19,7 +19,6 @@ a:hover {
   margin: 50vh;
 }
 
-
 .container {
   width: 1100px;
   margin: 0 auto;
@@ -65,7 +64,7 @@ a {
 
 .load_more_container span {
   cursor: pointer;
-  background: #2196F3;
+  background: #2196f3;
   color: #ffffff;
   font-size: 27px;
   padding: 10px 60px;
@@ -122,7 +121,7 @@ tr:nth-child(even) {
   width: 200px;
   height: 200px;
   background-size: cover !important;
-  display: inline-block
+  display: inline-block;
 }
 
 input {
@@ -145,7 +144,7 @@ button {
 }
 
 .error_label {
-  color: #F44336;
+  color: #f44336;
   display: block;
   font-size: 15px;
 }
@@ -203,7 +202,7 @@ select {
 }
 
 .form_success {
-  background: #4CAF50;
+  background: #4caf50;
   color: #ffffffff;
   padding: 10px;
   display: block;
@@ -232,7 +231,6 @@ select {
 .products_table .edit_btn:hover {
   background: #3d99a8;
 }
-
 
 /*============================
             BUTTONS
@@ -298,7 +296,6 @@ select {
   margin-top: 10px;
 }
 
-
 /*============================
         PAGE TOP
 ==============================*/
@@ -308,7 +305,6 @@ select {
   padding: 20px 0px;
   text-transform: uppercase;
 }
-
 
 /*============================
             HEADER
@@ -382,12 +378,9 @@ header .log_out_link {
   margin-left: 20px;
 }
 
-
 /*============================
             FOOTER
 ==============================*/
-
-
 
 footer .logo {
   text-align: center;
@@ -430,8 +423,6 @@ footer .business_nfo .MuiSvgIcon-root {
 footer .business_nfo .nfo {
   padding-left: 40px;
 }
-
-
 
 /*============================
         FEATURED IMAGE
@@ -480,7 +471,6 @@ footer .business_nfo .nfo {
   box-sizing: border-box;
 }
 
-
 .slim_promotion .tag {
   background: #82828287;
   color: #ffffff;
@@ -510,7 +500,6 @@ footer .business_nfo .nfo {
   margin-top: 20px;
 }
 
-
 /*============================
         CARD BLOCK
 ==============================*/
@@ -533,7 +522,6 @@ footer .business_nfo .nfo {
   margin-bottom: 20px;
   border-bottom: 1px solid #e8e8e8;
 }
-
 
 .page-item.active .page-link {
   background-color: #272723;
@@ -565,7 +553,6 @@ footer .business_nfo .nfo {
   border: 1px solid #f0f0f0;
 }
 
-
 .card_item_wrapper .tags {
   position: relative;
   border-bottom: 1px solid #f0f0f0;
@@ -581,7 +568,7 @@ footer .business_nfo .nfo {
 .card_item_wrapper .tags .brand {
   font-size: 17px;
   font-weight: 700;
-  color: #2196F3;
+  color: #2196f3;
 }
 
 .card_item_wrapper .tags .name {
@@ -614,7 +601,6 @@ footer .business_nfo .nfo {
   width: 420px;
   height: 211px;
   border: none;
-
 }
 
 .card_item_wrapper.grid_bars .action_container {
@@ -637,10 +623,9 @@ footer .business_nfo .nfo {
   font-size: 21px;
 }
 
-
 .card_item_wrapper.grid_bars .tags .brand,
 .card_item_wrapper.grid_bars .tags .name {
-  float: left
+  float: left;
 }
 
 .card_item_wrapper.grid_bars .tags .price {
@@ -670,11 +655,11 @@ footer .business_nfo .nfo {
 }
 
 .collapse_items_wrapper .MuiList-root {
-  borderBottom: '1px solid #dbdbdb'
+  borderbottom: '1px solid #dbdbdb';
 }
 
 .collapse_items_wrapper .MuiListItem-root {
-  padding: '10px 23px 10px 0'
+  padding: '10px 23px 10px 0';
 }
 
 .collapse_items_wrapper .collapse_title span {
@@ -697,7 +682,6 @@ footer .business_nfo .nfo {
   margin: 0px 20px 20px 20px;
 }
 
-
 /*============================
         PRODUCT DETAIL
 ==============================*/
@@ -715,7 +699,6 @@ footer .business_nfo .nfo {
 
 .product_detail_wrapper .left div {
   padding-right: 20px;
-
 }
 
 .product_detail_wrapper .left div img {
@@ -793,7 +776,6 @@ footer .business_nfo .nfo {
   color: #999592;
 }
 
-
 .product_detail_wrapper .product_actions {
   padding: 20px 0px 30px 0px;
   border-bottom: 1px solid #d3d3d3;
@@ -824,11 +806,8 @@ footer .business_nfo .nfo {
 }
 
 .product_detail_wrapper .main_thumbs {
-
   margin-top: 10px;
 }
-
-
 
 .product_detail_wrapper .main_thumbs .thumb {
   cursor: pointer;
@@ -862,7 +841,7 @@ footer .business_nfo .nfo {
 
 .register_login_container .left,
 .register_login_container .right {
-  flex: 1
+  flex: 1;
 }
 
 .register_login_container h2 {
@@ -927,13 +906,11 @@ footer .business_nfo .nfo {
   font-size: 25px;
 }
 
-
 .user_container .user_nfo_panel span {
   display: block;
   font-size: 18px;
   font-weight: 300;
 }
-
 
 .user_product_block {
   display: flex;
@@ -960,10 +937,9 @@ footer .business_nfo .nfo {
   width: 0px;
 }
 
-
 .user_product_block .cart_remove_btn {
   cursor: pointer;
-  background: #F44336;
+  background: #f44336;
   display: inline-block;
   padding: 5px 10px;
   color: #ffffff;
@@ -1047,5 +1023,5 @@ footer .business_nfo .nfo {
 }
 
 .pp_button {
-  margin-top: 10px
+  margin-top: 10px;
 }

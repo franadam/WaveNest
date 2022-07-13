@@ -1,5 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit';
 import authReducer from './reducers/auth.reducer';
+import brandsReducer from './reducers/brands.reducer';
 import guitarsReducer from './reducers/guitars.reducer';
 import notificationsReducer from './reducers/notifications.reducer';
 import usersReducer from './reducers/users.reducer';
@@ -9,6 +10,7 @@ export const store = configureStore({
     auth: authReducer,
     users: usersReducer,
     guitars: guitarsReducer,
+    brands: brandsReducer,
     notifications: notificationsReducer,
   },
 });

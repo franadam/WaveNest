@@ -1,31 +1,42 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import {
+  createAsyncThunk,
+  createEntityAdapter,
+  createSlice,
+} from '@reduxjs/toolkit';
+import { ToastType } from 'interfaces/ToastType.enum';
 import { User } from 'interfaces/Users.interface';
 import { fetchUsers } from 'services/users.service';
-import { normalizer } from 'utils/normalizer';
+import { RootState } from 'store/store';
+import { customError } from 'utils/customError';
 import { errorGlobal, successGlobal } from './notifications.reducer';
 
-interface State {
-  status: string;
-  ids: number[];
-  entities: { [id: string]: User };
-}
+// interface State {
+//   status: 'idle' | 'pending' | 'succeeded' | 'failed';
+// }
 
-const initialState: State = {
+const usersAdapter = createEntityAdapter<User>();
+
+const initialState = usersAdapter.getInitialState({
   status: 'idle',
-  ids: [],
-  entities: {},
-};
+});
 
 export const getUsers = createAsyncThunk(
   'users/getAllUsers',
   async (__, thunkApi) => {
     try {
       const users = await fetchUsers();
-      // thunkApi.dispatch(successGlobal('fulfilled fulfilled fulfilled'));
+      thunkApi.dispatch(
+        successGlobal({
+          message: `users fetched`,
+          type: ToastType.READ_SUCCESS,
+        })
+      );
       console.log('reducer users', users);
       return users;
-    } catch (error: any) {
+    } catch (err: any) {
+      const error = customError(err.response.data);
       await thunkApi.dispatch(errorGlobal(error.message));
+      return thunkApi.rejectWithValue(error);
     }
   }
 );
@@ -37,22 +48,21 @@ const usersSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(getUsers.pending, (state) => {
-        state.status = 'loading';
+        state.status = 'pending';
       })
-      .addCase(getUsers.fulfilled, (state, action) => {
-        state.status = 'succeeded';
-        if (action.payload) {
-          const { ids, entities } = normalizer(action.payload);
-          state.ids = ids;
-          state.entities = entities;
-        }
-      })
-      .addCase(getUsers.rejected, (state, action) => {
+      .addCase(getUsers.fulfilled, usersAdapter.upsertMany)
+      .addCase(getUsers.rejected, (state) => {
         state.status = 'failed';
       });
   },
 });
 
-export const {} = usersSlice.actions;
+export const {
+  selectAll: selectAllUsers,
+  selectById: selectUserById,
+  selectIds: selectUserIds,
+} = usersAdapter.getSelectors<RootState>((state) => state.users);
+
+// export const {} = usersSlice.actions;
 
 export default usersSlice.reducer;

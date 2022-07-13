@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Brand } from 'src/brands/entities/brand.entity';
-import { BodyInt, Order, QueryInt } from 'src/interfaces/query.interface';
+import { Order, Filter, QueryInt } from 'src/interfaces/query.interface';
 import { Between, Repository } from 'typeorm';
 import { CreateGuitarDto } from './dto/create-guitar.dto';
 import { UpdateGuitarDto } from './dto/update-guitar.dto';
@@ -50,7 +50,7 @@ export class GuitarsService {
     return this.guitarRepo.remove(guitar);
   }
 
-  async shopping(filters: QueryInt) {
+  async shopping(filters: Filter) {
     const order = filters.order ? filters.order.toUpperCase() : 'DESC';
     const sortBy = filters.sortBy ? filters.sortBy : 'model';
     const limit = filters.limit ? parseInt(filters.limit) : 10;
@@ -68,6 +68,15 @@ export class GuitarsService {
       .orderBy(sortBy, order as Order)
       .getMany();
 
-    return guitars;
+    const filteredGuitars = guitars.filter((guitar) => {
+      let isValid = true;
+      for (const key in filters) {
+        console.log(key, guitar[key], filters[key]);
+        isValid = isValid && guitar[key] === filters[key];
+      }
+      return isValid;
+    });
+
+    return filteredGuitars;
   }
 }

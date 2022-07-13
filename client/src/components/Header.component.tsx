@@ -1,14 +1,18 @@
 import React, { useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from 'hooks/use-type-selector.hook';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { isUserAuth, logoutUser } from 'store/reducers/auth.reducer';
+import { clearNotifications } from 'store/reducers/notifications.reducer';
 
 export const Header: React.FC = () => {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   const isAuth = useAppSelector(({ auth }) => auth.isAuth);
 
   const logout = async () => {
     await dispatch(logoutUser());
+    navigate('/');
+    await dispatch(clearNotifications());
   };
 
   useEffect(() => {

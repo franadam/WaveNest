@@ -24,7 +24,7 @@ export const LoginForm: React.FC = () => {
     if (
       userIsAuth &&
       notifications &&
-      notifications.type === ToastType.SUCCESS
+      notifications.type === ToastType.AUTH_SUCCESS
     ) {
       navigate('/dashboard', { replace: true });
       dispatch(clearNotifications());

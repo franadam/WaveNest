@@ -1,17 +1,23 @@
 import { Brand } from './Brands.interface';
 
-export interface Guitar {
-  id: number;
+export interface ServerGuitar {
   model: string;
   frets: number;
   wood: string;
+  description: string;
+  price: number;
+  available: number;
+  shipping: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface Guitar extends ServerGuitar {
+  id: number;
   brand: Brand;
   description: string;
   price: number;
   available: number;
   itemSold: number;
-  shipping: boolean;
   images: string[];
-  created_at: string;
-  updated_at: string;
 }

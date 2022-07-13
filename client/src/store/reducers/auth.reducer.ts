@@ -1,4 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { ToastType } from 'interfaces/ToastType.enum';
 import { Credentials, User, UserRole } from 'interfaces/Users.interface';
 import {
   googleLogin,
@@ -12,10 +13,11 @@ import {
 } from 'services/users.service';
 import { RootState } from 'store/store';
 import { customError } from 'utils/customError';
+import { updateFieldHelper } from 'utils/updateHelper';
 import { errorGlobal, successGlobal } from './notifications.reducer';
 
 interface State {
-  status: string;
+  status: 'idle' | 'pending' | 'succeeded' | 'failed';
   profile: User;
   isAuth: Boolean;
 }
@@ -44,9 +46,10 @@ export const registerUser = createAsyncThunk(
     try {
       const user = await register(credentials);
       await thunkApi.dispatch(
-        successGlobal(
-          `Welcome ${user.firstname}, check your mail to verify the account`
-        )
+        successGlobal({
+          message: `Welcome ${user.firstname}, check your mail to verify the account`,
+          type: ToastType.AUTH_SUCCESS,
+        })
       );
       return user;
     } catch (err: any) {
@@ -62,7 +65,12 @@ export const loginUser = createAsyncThunk(
     try {
       const user = await login(credentials);
 
-      await thunkApi.dispatch(successGlobal(`Welcome ${user.firstname}`));
+      await thunkApi.dispatch(
+        successGlobal({
+          message: `Welcome ${user.firstname}`,
+          type: ToastType.AUTH_SUCCESS,
+        })
+      );
       return user;
     } catch (err: any) {
       const error = customError(err.response.data);
@@ -77,10 +85,17 @@ export const logoutUser = createAsyncThunk(
     try {
       const user = await logout();
 
-      await thunkApi.dispatch(successGlobal(`Goodby ${user.firstname}`));
+      await thunkApi.dispatch(
+        successGlobal({
+          message: `Goodby ${user.firstname}`,
+          type: ToastType.AUTH_SUCCESS,
+        })
+      );
       return user;
     } catch (err: any) {
       const error = customError(err.response.data);
+      console.log(err);
+      console.log(error);
       await thunkApi.dispatch(errorGlobal(error.message));
     }
   }
@@ -92,7 +107,12 @@ export const googleLoginUser = createAsyncThunk(
     try {
       const user = await googleLogin();
 
-      await thunkApi.dispatch(successGlobal(`Welcome ${user.firstname}`));
+      await thunkApi.dispatch(
+        successGlobal({
+          message: `Welcome ${user.firstname}`,
+          type: ToastType.AUTH_SUCCESS,
+        })
+      );
       return user;
     } catch (err: any) {
       const error = customError(err.response.data);
@@ -107,7 +127,12 @@ export const getProfile = createAsyncThunk(
     try {
       const user = await profile();
 
-      await thunkApi.dispatch(successGlobal(`Welcome ${user.firstname}`));
+      await thunkApi.dispatch(
+        successGlobal({
+          message: `Welcome ${user.firstname}`,
+          type: ToastType.AUTH_SUCCESS,
+        })
+      );
 
       return user;
     } catch (err: any) {
@@ -122,7 +147,13 @@ export const isUserAuth = createAsyncThunk(
   async (_, thunkApi) => {
     try {
       const isLogged = isAuth();
-      if (isLogged) await thunkApi.dispatch(getProfile());
+
+      if (isLogged) {
+        await thunkApi.dispatch(
+          successGlobal({ message: `Welcome`, type: ToastType.AUTH_SUCCESS })
+        );
+        await thunkApi.dispatch(getProfile());
+      }
       return isLogged;
     } catch (err: any) {
       const error = customError(err.response.data);
@@ -143,7 +174,12 @@ export const updateProfile = createAsyncThunk(
         st.auth.profile.email === email
           ? await update(id, rest)
           : await update(id, updates);
-      await thunkApi.dispatch(successGlobal('profile updated'));
+      await thunkApi.dispatch(
+        successGlobal({
+          message: 'profile updated',
+          type: ToastType.AUTH_SUCCESS,
+        })
+      );
       console.log('reducer profile', profile);
       return profile;
     } catch (err: any) {
@@ -158,7 +194,12 @@ export const updateProfileEmail = createAsyncThunk(
   async ({ id, email }: { id: number; email: string }, thunkApi) => {
     try {
       const user = await updateEmail(id, email);
-      await thunkApi.dispatch(successGlobal('profile updated'));
+      await thunkApi.dispatch(
+        successGlobal({
+          message: 'profile updated',
+          type: ToastType.AUTH_SUCCESS,
+        })
+      );
       return user;
     } catch (err: any) {
       const error = customError(err.response.data);
@@ -167,10 +208,6 @@ export const updateProfileEmail = createAsyncThunk(
   }
 );
 
-const updateProfileHelper = (field: string, state: any, action: any) => {
-  return action.payload[field] ? action.payload[field] : state.profile[field];
-};
-
 const authSlice = createSlice({
   name: 'auth',
   initialState,
@@ -178,7 +215,7 @@ const authSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(registerUser.pending, (state) => {
-        state.status = 'loading';
+        state.status = 'pending';
       })
       .addCase(registerUser.fulfilled, (state, action) => {
         if (action.payload) {
@@ -200,7 +237,7 @@ const authSlice = createSlice({
         state.status = 'failed';
       })
       .addCase(loginUser.pending, (state) => {
-        state.status = 'loading';
+        state.status = 'pending';
       })
       .addCase(loginUser.fulfilled, (state, action) => {
         if (action.payload) {
@@ -223,7 +260,7 @@ const authSlice = createSlice({
         state.status = 'failed';
       })
       .addCase(googleLoginUser.pending, (state) => {
-        state.status = 'loading';
+        state.status = 'pending';
       })
       .addCase(googleLoginUser.fulfilled, (state, action) => {
         if (action.payload) {
@@ -246,7 +283,7 @@ const authSlice = createSlice({
         state.status = 'failed';
       })
       .addCase(logoutUser.pending, (state) => {
-        state.status = 'loading';
+        state.status = 'pending';
       })
       .addCase(logoutUser.fulfilled, (state, action) => {
         if (action.payload) {
@@ -269,16 +306,17 @@ const authSlice = createSlice({
         state.status = 'failed';
       })
       .addCase(isUserAuth.pending, (state) => {
-        state.status = 'loading';
+        state.status = 'pending';
       })
       .addCase(isUserAuth.fulfilled, (state, action) => {
         if (action.payload) state.isAuth = action.payload;
+        state.status = 'succeeded';
       })
       .addCase(isUserAuth.rejected, (state) => {
         state.status = 'failed';
       })
       .addCase(getProfile.pending, (state) => {
-        state.status = 'loading';
+        state.status = 'pending';
       })
       .addCase(getProfile.fulfilled, (state, action) => {
         if (action.payload) {
@@ -288,6 +326,7 @@ const authSlice = createSlice({
           state.profile.password = action.payload.password;
           state.profile.id = action.payload.id;
           state.profile.email = action.payload.email;
+          state.isAuth = true;
           state.profile.token = action.payload.token;
           state.profile.history = action.payload.history;
           state.profile.cart = action.payload.cart;
@@ -300,51 +339,37 @@ const authSlice = createSlice({
         state.status = 'failed';
       })
       .addCase(updateProfile.pending, (state) => {
-        state.status = 'loading';
+        state.status = 'pending';
       })
       .addCase(updateProfile.fulfilled, (state, action) => {
         if (action.payload) {
-          state.profile.firstname = updateProfileHelper(
+          state.profile.firstname = updateFieldHelper(
             'firstname',
             state,
             action
           );
-          state.profile.lastname = updateProfileHelper(
-            'lastname',
-            state,
-            action
-          );
-          state.profile.username = updateProfileHelper(
-            'username',
-            state,
-            action
-          );
-          state.profile.password = updateProfileHelper(
-            'password',
-            state,
-            action
-          );
-          state.profile.email = updateProfileHelper('email', state, action);
-          state.profile.token = updateProfileHelper('token', state, action);
-          state.profile.history = updateProfileHelper('history', state, action);
-          state.profile.cart = updateProfileHelper('cart', state, action);
-          state.profile.verified = updateProfileHelper(
-            'verified',
-            state,
-            action
-          );
-          state.profile.roles = updateProfileHelper('roles', state, action);
+          state.profile.lastname = updateFieldHelper('lastname', state, action);
+          state.profile.username = updateFieldHelper('username', state, action);
+          state.profile.password = updateFieldHelper('password', state, action);
+          state.profile.email = updateFieldHelper('email', state, action);
+          state.profile.token = updateFieldHelper('token', state, action);
+          state.profile.history = updateFieldHelper('history', state, action);
+          state.profile.cart = updateFieldHelper('cart', state, action);
+          state.profile.verified = updateFieldHelper('verified', state, action);
+          state.profile.roles = updateFieldHelper('roles', state, action);
           state.status = 'succeeded';
+          state.isAuth = true;
         }
       })
       .addCase(updateProfile.rejected, (state) => {
         state.status = 'failed';
       })
       .addCase(updateProfileEmail.pending, (state) => {
-        state.status = 'loading';
+        state.status = 'pending';
       })
       .addCase(updateProfileEmail.fulfilled, (state, action) => {
         if (action.payload) {
+          state.isAuth = true;
           state.profile.email = action.payload.email;
           state.status = 'succeeded';
         }

@@ -24,7 +24,7 @@ export const EmailStepper: React.FC = () => {
   const steps = ['Enter old email', 'Enter new email', 'Are you sure?'];
 
   useEffect(() => {
-    if (notifications.type === ToastType.SUCCESS) {
+    if (notifications.type === ToastType.UPDATE_SUCCESS) {
       dispatch(clearNotifications());
       closeModal();
       setIsLoading(false);

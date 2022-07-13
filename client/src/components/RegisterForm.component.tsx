@@ -21,7 +21,7 @@ export const RegisterForm: React.FC = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (notifications && notifications.type === ToastType.SUCCESS) {
+    if (notifications && notifications.type === ToastType.AUTH_SUCCESS) {
       navigate('/auth', { replace: true });
       dispatch(clearNotifications());
     } else {
