@@ -1,9 +1,9 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@mui/material';
-import { RegisterForm } from 'components/RegisterForm.component';
 import { useAppSelector } from 'hooks/use-type-selector.hook';
 import { ToastType } from 'interfaces/ToastType.enum';
+import { RegisterForm } from 'components/Auth/RegisterForm.component';
 
 export const Register: React.FC = () => {
   const notifications = useAppSelector(({ notifications }) => notifications);

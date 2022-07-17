@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@mui/material';
-import { LoginForm } from 'components/LoginForm.component';
 import { useAppSelector } from 'hooks/use-type-selector.hook';
+import { LoginForm } from 'components/Auth/LoginForm.component';
 
 export const Login: React.FC = () => {
   const userIsAuth = useAppSelector(({ auth }) => auth.isAuth);

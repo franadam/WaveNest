@@ -122,7 +122,6 @@ export const getGuitarsWithParams = createAsyncThunk(
   }
 );
 
-// need auth
 export const shopping = createAsyncThunk(
   'guitars/shopping',
   async (payload: Filter, thunkApi) => {

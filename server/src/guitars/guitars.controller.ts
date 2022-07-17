@@ -9,6 +9,8 @@ import {
   UseGuards,
   Query,
   Request,
+  UseInterceptors,
+  UploadedFile,
 } from '@nestjs/common';
 import { GuitarsService } from './guitars.service';
 import { CreateGuitarDto } from './dto/create-guitar.dto';
@@ -16,10 +18,16 @@ import { UpdateGuitarDto } from './dto/update-guitar.dto';
 import { JwtAuthGuard } from 'src/auth/Guards/jwt.guard';
 import { ACGuard, UseRoles } from 'nest-access-control';
 import { BodyInt, QueryInt } from 'src/interfaces/query.interface';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { ImagesService } from 'src/images/images.service';
+const sharp = require('sharp');
 
 @Controller('/api/guitars')
 export class GuitarsController {
-  constructor(private readonly guitarsService: GuitarsService) {}
+  constructor(
+    private readonly guitarsService: GuitarsService,
+    private readonly imagesService: ImagesService,
+  ) {}
 
   @UseGuards(JwtAuthGuard, ACGuard)
   @UseRoles({
@@ -41,6 +49,17 @@ export class GuitarsController {
   @Post('/shop')
   shopping(@Body() { filters }: BodyInt) {
     return this.guitarsService.shopping(filters);
+  }
+
+  @Post('/upload')
+  @UseInterceptors(FileInterceptor('picture', { dest: 'uploads/' }))
+  async uploadFile(@UploadedFile() file: Express.Multer.File) {
+    await sharp(file.path)
+      // .resize({ width: 250, height: 250 })
+      .png()
+      .toFile(`${file.path}.png`);
+    const upload = await this.imagesService.cloudStorage(`${file.path}.png`);
+    return upload;
   }
 
   @Get(':id')

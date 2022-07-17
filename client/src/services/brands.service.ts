@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { Brand } from 'interfaces/Brands.interface';
-import { getToken } from './users.service';
+import { authService } from './users.service';
 
 const baseUrl = 'http://localhost:5000/api/guitars/brands';
 
@@ -22,7 +22,7 @@ const updateBrand = async (
   updates: Partial<Brand>
 ): Promise<Brand> => {
   const response = await axios.patch(`${baseUrl}/${id}`, updates, {
-    headers: { Authorization: `Bearer ${getToken()}` },
+    headers: { Authorization: `Bearer ${authService.getToken()}` },
   });
   const brand = response.data;
   console.log('brand', brand);
@@ -31,7 +31,7 @@ const updateBrand = async (
 
 const deleteBrand = async (id: number): Promise<Brand> => {
   const response = await axios.delete(`${baseUrl}/${id}`, {
-    headers: { Authorization: `Bearer ${getToken()}` },
+    headers: { Authorization: `Bearer ${authService.getToken()}` },
   });
   const brand = response.data;
   console.log('brand', brand);

@@ -2,9 +2,7 @@ import React, { useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from 'hooks/use-type-selector.hook';
 import { getGuitars, selectAllGuitars } from 'store/reducers/guitars.reducer';
 import { CarouselItem } from 'interfaces/Carrousel.interface';
-import { Featured } from 'components/Featured.component';
-import { SlimPromotion } from 'components/SlimPromotion.component';
-import { CardBlock } from 'components/CardBlock.component';
+import { CardBlock, Featured, SlimPromotion } from 'components/Home';
 import { Loader } from 'components/Loader.component';
 
 export const Home: React.FC = () => {

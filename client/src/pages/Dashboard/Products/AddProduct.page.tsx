@@ -19,6 +19,9 @@ import { Loader } from 'components/Loader.component';
 import { productFormValidations } from 'utils/formikValidations';
 import { getBrands, selectAllBrands } from 'store/reducers/brands.reducer';
 import { addGuitar } from 'store/reducers/guitars.reducer';
+import { PicUpload } from 'components/Upload.component';
+import { Picture } from 'interfaces/Pictures.interface';
+import { ImageViewer } from 'components/ImageViewer';
 
 export const AddProduct: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -50,6 +53,7 @@ export const AddProduct: React.FC = () => {
       available: '',
       description: '',
       brand: '',
+      images: [{ id: '', url: '' }],
       shipping: false,
       created_at: new Date(),
       updated_at: new Date(),
@@ -67,6 +71,7 @@ export const AddProduct: React.FC = () => {
         wood: values.wood,
         frets: +values.frets,
         publish: values.shipping,
+        images: values.images,
       };
       dispatch(addGuitar(newGuitar));
 
@@ -75,7 +80,19 @@ export const AddProduct: React.FC = () => {
     },
   });
 
-  const fields = Object.keys(formik.values).slice(0, -4);
+  const fields = Object.keys(formik.values).slice(0, -5);
+  console.log('fields', fields);
+  const handlePictureValue = (picture: Picture) => {
+    const pictures = formik.values.images.filter((img) => img.id !== '');
+    pictures.push(picture);
+    console.log('pictures', pictures);
+    formik.setFieldValue('images', pictures);
+  };
+
+  const deleteImage = (id: string) => {
+    const pictures = formik.values.images.filter((img) => img.id !== id);
+    formik.setFieldValue('images', pictures);
+  };
 
   return (
     <DashboardHoc title="Add Product">
@@ -83,6 +100,13 @@ export const AddProduct: React.FC = () => {
         <Loader />
       ) : (
         <>
+          <ImageViewer
+            images={formik.values.images}
+            deleteImage={deleteImage}
+          />
+          <PicUpload handlePictureValue={handlePictureValue} />
+          <Divider className="mt-3 mb-3" />
+
           <form className="mt-3 article_form" onSubmit={formik.handleSubmit}>
             {fields.map((field) => (
               <div key={field} className="formBlock">

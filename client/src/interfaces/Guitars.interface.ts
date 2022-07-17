@@ -1,4 +1,5 @@
 import { Brand } from './Brands.interface';
+import { Picture } from './Pictures.interface';
 
 export interface ServerGuitar {
   model: string;
@@ -19,5 +20,5 @@ export interface Guitar extends ServerGuitar {
   price: number;
   available: number;
   itemSold: number;
-  images: string[];
+  images: Picture[];
 }

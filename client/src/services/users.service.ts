@@ -43,12 +43,12 @@ const profile = async (): Promise<User> => {
   return response.data;
 };
 
-const fetchToken = async (): Promise<Boolean> => {
-  axios.defaults.withCredentials = true;
-  const response = await axios(`${authUrl}/token`, { withCredentials: true });
-  console.log('service >> response.data', response.data);
-  return response.data;
-};
+// const fetchToken = async (): Promise<Boolean> => {
+//   axios.defaults.withCredentials = true;
+//   const response = await axios(`${authUrl}/token`, { withCredentials: true });
+//   console.log('service >> response.data', response.data);
+//   return response.data;
+// };
 
 const saveToken = (token: string): void => {
   localStorage.setItem('authoken', token);
@@ -89,17 +89,18 @@ const updateEmail = async (id: number, email: string) => {
   return response.data;
 };
 
-export {
-  register,
+const authService = {
   login,
+  register,
   googleLogin,
   logout,
-  profile,
-  fetchToken,
-  removeToken,
-  getToken,
   isAuth,
-  fetchUsers,
+  getToken,
+  profile,
   update,
   updateEmail,
 };
+
+const usersService = { fetchUsers };
+
+export { authService, usersService };

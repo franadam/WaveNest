@@ -5,7 +5,7 @@ import {
 } from '@reduxjs/toolkit';
 import { ToastType } from 'interfaces/ToastType.enum';
 import { User } from 'interfaces/Users.interface';
-import { fetchUsers } from 'services/users.service';
+import { usersService } from 'services/users.service';
 import { RootState } from 'store/store';
 import { customError } from 'utils/customError';
 import { errorGlobal, successGlobal } from './notifications.reducer';
@@ -24,7 +24,7 @@ export const getUsers = createAsyncThunk(
   'users/getAllUsers',
   async (__, thunkApi) => {
     try {
-      const users = await fetchUsers();
+      const users = await usersService.fetchUsers();
       thunkApi.dispatch(
         successGlobal({
           message: `users fetched`,

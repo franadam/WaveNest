@@ -23,16 +23,15 @@ export const AdminProducts: React.FC = () => {
   const notifications = useAppSelector(({ notifications }) => notifications);
 
   const allGuitars = useAppSelector((state) => selectAllGuitars(state));
-  console.log('allGuitars', allGuitars);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const [products, setProducts] = useState(allGuitars);
   const [idToRemove, setIdToRemove] = useState(0);
 
   useEffect(() => {
-    if (!allGuitars.length) dispatch(getGuitars());
-    else setProducts(allGuitars);
-  }, [dispatch, allGuitars, products]);
+    dispatch(getGuitars());
+    setProducts(allGuitars);
+  }, []);
 
   useEffect(() => {
     closeModal();
@@ -53,7 +52,6 @@ export const AdminProducts: React.FC = () => {
 
   const deleteProduct = () => {
     closeModal();
-    console.log('idToRemove :>> ', idToRemove);
     dispatch(deleteGuitar(idToRemove));
   };
 

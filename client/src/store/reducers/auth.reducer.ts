@@ -1,16 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { ToastType } from 'interfaces/ToastType.enum';
 import { Credentials, User, UserRole } from 'interfaces/Users.interface';
-import {
-  googleLogin,
-  login,
-  logout,
-  profile,
-  register,
-  isAuth,
-  update,
-  updateEmail,
-} from 'services/users.service';
+import { authService } from 'services/users.service';
 import { RootState } from 'store/store';
 import { customError } from 'utils/customError';
 import { updateFieldHelper } from 'utils/updateHelper';
@@ -44,7 +35,7 @@ export const registerUser = createAsyncThunk(
   'auth/register',
   async (credentials: User, thunkApi) => {
     try {
-      const user = await register(credentials);
+      const user = await authService.register(credentials);
       await thunkApi.dispatch(
         successGlobal({
           message: `Welcome ${user.firstname}, check your mail to verify the account`,
@@ -55,6 +46,7 @@ export const registerUser = createAsyncThunk(
     } catch (err: any) {
       const error = customError(err.response.data);
       await thunkApi.dispatch(errorGlobal(error.message));
+      return thunkApi.rejectWithValue(error);
     }
   }
 );
@@ -63,7 +55,7 @@ export const loginUser = createAsyncThunk(
   'auth/login',
   async (credentials: Credentials, thunkApi) => {
     try {
-      const user = await login(credentials);
+      const user = await authService.login(credentials);
 
       await thunkApi.dispatch(
         successGlobal({
@@ -75,6 +67,7 @@ export const loginUser = createAsyncThunk(
     } catch (err: any) {
       const error = customError(err.response.data);
       await thunkApi.dispatch(errorGlobal(error.message));
+      return thunkApi.rejectWithValue(error);
     }
   }
 );
@@ -83,7 +76,7 @@ export const logoutUser = createAsyncThunk(
   'auth/logout',
   async (_, thunkApi) => {
     try {
-      const user = await logout();
+      const user = await authService.logout();
 
       await thunkApi.dispatch(
         successGlobal({
@@ -94,9 +87,8 @@ export const logoutUser = createAsyncThunk(
       return user;
     } catch (err: any) {
       const error = customError(err.response.data);
-      console.log(err);
-      console.log(error);
       await thunkApi.dispatch(errorGlobal(error.message));
+      return thunkApi.rejectWithValue(error);
     }
   }
 );
@@ -105,7 +97,7 @@ export const googleLoginUser = createAsyncThunk(
   'auth/login/google',
   async (_, thunkApi) => {
     try {
-      const user = await googleLogin();
+      const user = await authService.googleLogin();
 
       await thunkApi.dispatch(
         successGlobal({
@@ -117,6 +109,7 @@ export const googleLoginUser = createAsyncThunk(
     } catch (err: any) {
       const error = customError(err.response.data);
       await thunkApi.dispatch(errorGlobal(error.message));
+      return thunkApi.rejectWithValue(error);
     }
   }
 );
@@ -125,7 +118,7 @@ export const getProfile = createAsyncThunk(
   'auth/profile',
   async (_, thunkApi) => {
     try {
-      const user = await profile();
+      const user = await authService.profile();
 
       await thunkApi.dispatch(
         successGlobal({
@@ -138,6 +131,7 @@ export const getProfile = createAsyncThunk(
     } catch (err: any) {
       const error = customError(err.response.data);
       await thunkApi.dispatch(errorGlobal(error.message));
+      return thunkApi.rejectWithValue(error);
     }
   }
 );
@@ -146,7 +140,7 @@ export const isUserAuth = createAsyncThunk(
   'auth/isUserAuth',
   async (_, thunkApi) => {
     try {
-      const isLogged = isAuth();
+      const isLogged = authService.isAuth();
 
       if (isLogged) {
         await thunkApi.dispatch(
@@ -158,6 +152,7 @@ export const isUserAuth = createAsyncThunk(
     } catch (err: any) {
       const error = customError(err.response.data);
       await thunkApi.dispatch(errorGlobal(error.message));
+      return thunkApi.rejectWithValue(error);
     }
   }
 );
@@ -172,8 +167,8 @@ export const updateProfile = createAsyncThunk(
 
       const profile =
         st.auth.profile.email === email
-          ? await update(id, rest)
-          : await update(id, updates);
+          ? await authService.update(id, rest)
+          : await authService.update(id, updates);
       await thunkApi.dispatch(
         successGlobal({
           message: 'profile updated',
@@ -185,6 +180,7 @@ export const updateProfile = createAsyncThunk(
     } catch (err: any) {
       const error = customError(err.response.data);
       await thunkApi.dispatch(errorGlobal(error.message));
+      return thunkApi.rejectWithValue(error);
     }
   }
 );
@@ -193,7 +189,7 @@ export const updateProfileEmail = createAsyncThunk(
   'auth/updateProfileEmail',
   async ({ id, email }: { id: number; email: string }, thunkApi) => {
     try {
-      const user = await updateEmail(id, email);
+      const user = await authService.updateEmail(id, email);
       await thunkApi.dispatch(
         successGlobal({
           message: 'profile updated',
@@ -204,6 +200,7 @@ export const updateProfileEmail = createAsyncThunk(
     } catch (err: any) {
       const error = customError(err.response.data);
       await thunkApi.dispatch(errorGlobal(error.message));
+      return thunkApi.rejectWithValue(error);
     }
   }
 );
