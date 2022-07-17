@@ -51,14 +51,20 @@ export class GuitarsController {
     return this.guitarsService.shopping(filters);
   }
 
+  @UseGuards(JwtAuthGuard, ACGuard)
+  @UseRoles({
+    resource: 'guitars',
+    action: 'create',
+    possession: 'any',
+  })
   @Post('/upload')
-  @UseInterceptors(FileInterceptor('picture', { dest: 'uploads/' }))
+  @UseInterceptors(FileInterceptor('picture'))
   async uploadFile(@UploadedFile() file: Express.Multer.File) {
-    await sharp(file.path)
+    const buffer = await sharp(file.buffer)
       // .resize({ width: 250, height: 250 })
       .png()
-      .toFile(`${file.path}.png`);
-    const upload = await this.imagesService.cloudStorage(`${file.path}.png`);
+      .toBuffer();
+    const upload = await this.imagesService.cloudStorage(buffer);
     return upload;
   }
 
