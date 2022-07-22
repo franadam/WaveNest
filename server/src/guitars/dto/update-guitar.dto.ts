@@ -24,6 +24,6 @@ export class UpdateGuitarDto extends PartialType(CreateGuitarDto) {
   available: number;
 
   @IsNumber()
-  @Max(5550)
+  @Max(1000000)
   price: number;
 }

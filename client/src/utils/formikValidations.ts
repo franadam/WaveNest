@@ -1,18 +1,54 @@
 import * as Yup from 'yup';
+import { FormikValues } from 'formik';
+import { Guitar } from 'interfaces/Guitars.interface';
+import { Picture } from 'interfaces/Pictures.interface';
+
+export interface MyFormikValues extends FormikValues {
+  model: string;
+  frets: number;
+  wood: string;
+  price: number;
+  available: number;
+  description: string;
+  brand: number;
+  images: Picture[];
+  shipping: number;
+  itemSold: number;
+  created_at: string;
+  updated_at: string;
+}
 
 export const formValues = {
   model: '',
-  frets: '',
+  frets: 20,
   wood: '',
-  brand: '',
+  price: 1,
+  available: 0,
   description: '',
-  price: '',
-  available: '',
-  itemSold: '',
-  shipping: false,
-  created_at: new Date(),
-  updated_at: new Date(),
+  brand: 1,
+  images: [{ id: '', url: '' }],
+  shipping: 0,
+  id: 999,
+  itemSold: 0,
+  created_at: '',
+  updated_at: new Date().toISOString(),
 };
+
+export const getValuesToEdit = (guitar: any) => ({
+  model: guitar.model,
+  frets: +guitar.frets,
+  wood: guitar.wood,
+  price: +guitar.price,
+  available: +guitar.available,
+  description: guitar.description,
+  shipping: guitar.shipping,
+  images: guitar.images,
+  id: guitar.id,
+  brand: guitar.brand,
+  itemSold: guitar.itemSold,
+  created_at: guitar.created_at,
+  updated_at: guitar.updated_at,
+});
 
 export const productFormValidations = () =>
   Yup.object({
@@ -34,7 +70,7 @@ export const productFormValidations = () =>
       .required('Sorry, the description is required'),
     price: Yup.number()
       .min(1, '1 char min')
-      .max(100000, '100000 char max')
+      .max(1000000, '1000000 char max')
       .required('Sorry, the price is required'),
     available: Yup.number().required('Do we have stock'),
     shipping: Yup.boolean().required('Do we offer shipping'),

@@ -42,7 +42,7 @@ export const AddProduct: React.FC = () => {
       dispatch(clearNotifications());
     }
     if (notifications.type === ToastType.ERROR) setIsLoading(false);
-  }, [notifications, dispatch, navigate]);
+  }, [notifications, dispatch, navigate, allBrands]);
 
   const formik = useFormik({
     initialValues: {
@@ -60,7 +60,6 @@ export const AddProduct: React.FC = () => {
     },
     validationSchema: productFormValidations,
     onSubmit: (values) => {
-      console.log('values', values);
       const newGuitar = {
         model: values.model,
         description: values.description,
@@ -74,18 +73,15 @@ export const AddProduct: React.FC = () => {
         images: values.images,
       };
       dispatch(addGuitar(newGuitar));
-
       setIsLoading(true);
-      dispatch(clearNotifications());
     },
   });
 
   const fields = Object.keys(formik.values).slice(0, -5);
-  console.log('fields', fields);
+
   const handlePictureValue = (picture: Picture) => {
     const pictures = formik.values.images.filter((img) => img.id !== '');
     pictures.push(picture);
-    console.log('pictures', pictures);
     formik.setFieldValue('images', pictures);
   };
 
@@ -159,7 +155,7 @@ export const AddProduct: React.FC = () => {
 
             <div className="formBlock">
               <FormControl variant="outlined">
-                <h5>Do e offer free shipping?</h5>
+                <h5>Do we offer free shipping?</h5>
                 <Select
                   {...formik.getFieldProps('shipping')}
                   error={

@@ -61,6 +61,27 @@ export const getBrands = createAsyncThunk(
   }
 );
 
+export const getBrandById = createAsyncThunk(
+  'brands/getBrandById',
+  async (id: number, thunkApi) => {
+    try {
+      const brand = await brandService.readBrand(id);
+      thunkApi.dispatch(
+        successGlobal({
+          message: `brand${brand.id}  fetched`,
+          type: ToastType.READ_SUCCESS,
+        })
+      );
+      console.log('reducer brand', brand);
+      return brand;
+    } catch (err: any) {
+      const error = customError(err.response.data);
+      await thunkApi.dispatch(errorGlobal(error.message));
+      return thunkApi.rejectWithValue(error);
+    }
+  }
+);
+
 export const updateBrand = createAsyncThunk(
   'brands/update',
   async (
@@ -122,6 +143,13 @@ const brandsSlice = createSlice({
       })
       .addCase(getBrands.fulfilled, brandsAdapter.upsertMany)
       .addCase(getBrands.rejected, (state) => {
+        state.status = 'failed';
+      })
+      .addCase(getBrandById.pending, (state) => {
+        state.status = 'pending';
+      })
+      .addCase(getBrandById.fulfilled, brandsAdapter.upsertOne)
+      .addCase(getBrandById.rejected, (state) => {
         state.status = 'failed';
       })
       .addCase(updateBrand.pending, (state) => {

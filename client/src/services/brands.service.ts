@@ -17,6 +17,12 @@ const readBrands = async (): Promise<Brand[]> => {
   return response.data;
 };
 
+const readBrand = async (id: number): Promise<Brand> => {
+  const response = await axios(`${baseUrl}/${id}`);
+  console.log('service >> response.data', response.data);
+  return response.data;
+};
+
 const updateBrand = async (
   id: number,
   updates: Partial<Brand>
@@ -41,6 +47,7 @@ const deleteBrand = async (id: number): Promise<Brand> => {
 const brandService = {
   createBrand,
   readBrands,
+  readBrand,
   updateBrand,
   deleteBrand,
 };

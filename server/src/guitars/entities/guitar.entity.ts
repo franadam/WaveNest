@@ -1,4 +1,5 @@
 import { Brand } from 'src/brands/entities/brand.entity';
+import { Picture } from 'src/interfaces/Pictures.interface';
 import {
   Column,
   CreateDateColumn,
@@ -44,8 +45,8 @@ export class Guitar {
   @Column({ default: false })
   shipping: boolean;
 
-  @Column('varchar', { array: true, default: [] })
-  images: string[];
+  @Column('jsonb', { default: [{ id: '', url: '' }] })
+  images: Picture[];
 
   @CreateDateColumn()
   created_at: Date;

@@ -2,12 +2,10 @@ import React from 'react';
 import Moment from 'react-moment';
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
-import { Guitar } from 'interfaces/Guitars.interface';
 import { Table, Modal, Button } from 'react-bootstrap';
-import { Loader } from './Loader.component';
-import { useAppDispatch } from 'hooks/use-type-selector.hook';
-import { deleteGuitar, updateGuitar } from 'store/reducers/guitars.reducer';
 import { LinkContainer } from 'react-router-bootstrap';
+import { Loader } from './Loader.component';
+import { Guitar } from 'interfaces/Guitars.interface';
 
 interface Props {
   products: Guitar[];
@@ -28,13 +26,10 @@ export const ProductsTable: React.FC<Props> = ({
   deleteProduct,
   gotoEdit,
 }) => {
-  const dispatch = useAppDispatch();
-
   console.log('products', products);
-
   const editItem = (id: number) => {
     closeModal();
-    // dispatch(updateGuitar(id))
+    gotoEdit(id);
   };
 
   return (

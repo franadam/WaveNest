@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Brand } from 'src/brands/entities/brand.entity';
-import { Order, Filter, QueryInt } from 'src/interfaces/query.interface';
+import { Order, Filter, QueryInt } from 'src/interfaces/Query.interface';
 import { Between, Repository } from 'typeorm';
 import { CreateGuitarDto } from './dto/create-guitar.dto';
 import { UpdateGuitarDto } from './dto/update-guitar.dto';
@@ -13,15 +13,30 @@ export class GuitarsService {
     @InjectRepository(Guitar) private readonly guitarRepo: Repository<Guitar>,
   ) {}
 
-  create(createGuitarDto: CreateGuitarDto) {
+  async create(createGuitarDto: CreateGuitarDto) {
+    console.log('service guitar>> createGuitarDto', createGuitarDto);
     const guitar = this.guitarRepo.create(createGuitarDto);
-    return this.guitarRepo.save(guitar);
+    console.log('service guitar>>', guitar);
+    const saved = await this.guitarRepo.save(guitar);
+    console.log('service guitar>> saved', saved);
+    return saved;
   }
 
+  // {
+  //     "model" : "CB040",
+  //     "description" : "Beta Super",
+  //     "price" : 2000,
+  //     "brand" : 1,
+  //     "shipping" : true,
+  //     "available" : 15,
+  //     "wood" : "5b2c1c88255983b4795f8fdb",
+  //     "frets" : 22,
+  //     "publish" : true
+  // }
   findAll(query: QueryInt) {
     const order = query.order ? query.order.toUpperCase() : 'ASC';
     const sortBy = query.sortBy ? query.sortBy : 'id';
-    const take = query.limit ? parseInt(query.limit) : 10;
+    const take = query.limit ? parseInt(query.limit) : 100;
     const skip = query.skip ? parseInt(query.skip) : 0;
 
     return this.guitarRepo.find({
@@ -34,8 +49,15 @@ export class GuitarsService {
     });
   }
 
-  findOne(id: number) {
-    return this.guitarRepo.findOneBy({ id });
+  async findOne(id: number) {
+    const guitar = await this.guitarRepo.findOne({
+      where: { id },
+      relations: {
+        brand: true,
+      },
+    });
+    console.log('service >> guitar', guitar);
+    return guitar;
   }
 
   async update(id: number, updateGuitarDto: UpdateGuitarDto) {

@@ -40,12 +40,7 @@ export const PicUpload: React.FC<Props> = ({ handlePictureValue }) => {
     onSubmit(values) {
       let formData = new FormData();
       formData.append('picture', values.picture);
-      console.log('values, formData', values, formData);
       handleImage(formData);
-      // if (notifications && notifications.type === ToastType.CREATE_SUCCESS) {
-      //   setIsLoading(false);
-      //   dispatch(clearNotifications());
-      // }
     },
   });
 

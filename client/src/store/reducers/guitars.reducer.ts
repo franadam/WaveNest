@@ -26,9 +26,10 @@ const initialState = guitarsAdapter.getInitialState({
 });
 
 export const addGuitar = createAsyncThunk(
-  'guitars/add',
+  'guitars/create',
   async (payload: any, thunkApi) => {
     try {
+      console.log('reducer>> payload', payload);
       const guitar = await guitarService.createGuitar(payload);
       thunkApi.dispatch(
         successGlobal({
@@ -65,6 +66,26 @@ export const getGuitars = createAsyncThunk(
   }
 );
 
+export const getGuitarById = createAsyncThunk(
+  'guitars/getGuitarById',
+  async (id: number, thunkApi) => {
+    try {
+      const guitar = await guitarService.readGuitar(id);
+      thunkApi.dispatch(
+        successGlobal({
+          message: `guitar ${guitar.id} fetched`,
+          type: ToastType.READ_SUCCESS,
+        })
+      );
+      return guitar;
+    } catch (err: any) {
+      const error = customError(err.response.data);
+      await thunkApi.dispatch(errorGlobal(error.message));
+      return thunkApi.rejectWithValue(error);
+    }
+  }
+);
+
 export const updateGuitar = createAsyncThunk(
   'guitars/update',
   async (
@@ -72,6 +93,7 @@ export const updateGuitar = createAsyncThunk(
     thunkApi
   ) => {
     try {
+      console.log('reducer>> payload', payload);
       const guitar = await guitarService.updateGuitar(id, payload);
       thunkApi.dispatch(
         successGlobal({
@@ -153,23 +175,32 @@ const guitars = createSlice({
         state.status = 'pending';
       })
       .addCase(getGuitars.fulfilled, guitarsAdapter.upsertMany)
-      .addCase(updateGuitar.rejected, (state) => {
+      .addCase(getGuitars.rejected, (state) => {
+        state.status = 'failed';
+      })
+      .addCase(getGuitarById.pending, (state) => {
+        state.status = 'pending';
+      })
+      .addCase(getGuitarById.fulfilled, guitarsAdapter.upsertOne)
+      .addCase(getGuitarById.rejected, (state) => {
         state.status = 'failed';
       })
       .addCase(updateGuitar.pending, (state) => {
         state.status = 'pending';
       })
       .addCase(updateGuitar.fulfilled, guitarsAdapter.upsertOne)
-      .addCase(deleteGuitar.rejected, (state) => {
+      .addCase(updateGuitar.rejected, (state) => {
         state.status = 'failed';
       })
+
       .addCase(deleteGuitar.pending, (state) => {
         state.status = 'pending';
       })
       .addCase(deleteGuitar.fulfilled, guitarsAdapter.removeOne)
-      .addCase(getGuitars.rejected, (state) => {
+      .addCase(deleteGuitar.rejected, (state) => {
         state.status = 'failed';
       })
+
       .addCase(getGuitarsWithParams.pending, (state) => {
         state.status = 'pending';
       })

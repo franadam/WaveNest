@@ -12,6 +12,7 @@ import { Home } from 'pages/Home.page';
 import { Register } from 'pages/Register.page';
 import { Login } from 'pages/Login.page';
 import { AddProduct } from 'pages/Dashboard/Products/AddProduct.page';
+import { EditProduct } from 'pages/Dashboard/Products/EditProduct.page';
 
 export const App: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -35,7 +36,7 @@ export const App: React.FC = () => {
         />
         <Route
           path="/dashboard/admin/edit_product/:id"
-          element={<AuthGard ComposedComponent={AdminProducts} />}
+          element={<AuthGard ComposedComponent={EditProduct} />}
         />
         <Route
           path="/dashboard/user_profile"

@@ -17,7 +17,7 @@ import { CreateGuitarDto } from './dto/create-guitar.dto';
 import { UpdateGuitarDto } from './dto/update-guitar.dto';
 import { JwtAuthGuard } from 'src/auth/Guards/jwt.guard';
 import { ACGuard, UseRoles } from 'nest-access-control';
-import { BodyInt, QueryInt } from 'src/interfaces/query.interface';
+import { BodyInt, QueryInt } from 'src/interfaces/Query.interface';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ImagesService } from 'src/images/images.service';
 const sharp = require('sharp');

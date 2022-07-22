@@ -11,7 +11,7 @@ import {
 } from '@nestjs/common';
 import { ACGuard, UseRoles, UserRoles } from 'nest-access-control';
 import { JwtAuthGuard } from 'src/auth/Guards/jwt.guard';
-import { QueryInt } from 'src/interfaces/query.interface';
+import { QueryInt } from 'src/interfaces/Query.interface';
 import { BrandsService } from './brands.service';
 import { CreateBrandDto } from './dto/create-brand.dto';
 import { UpdateBrandDto } from './dto/update-brand.dto';

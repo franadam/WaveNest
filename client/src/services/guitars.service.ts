@@ -11,14 +11,21 @@ const createGuitar = async (g: any): Promise<Guitar> => {
     headers: { Authorization: `Bearer ${authService.getToken()}` },
   });
   const guitar = response.data;
-  console.log('guitar', guitar);
+  // console.log('typeof guitar.image[0]', typeof guitar.image[0]);
   return guitar;
 };
 
 const readGuitars = async (): Promise<Guitar[]> => {
   const response = await axios(`${baseUrl}`);
-  console.log('service >> response.data', response.data);
   return response.data;
+};
+
+const readGuitar = async (id: number): Promise<Guitar> => {
+  const response = await axios(`${baseUrl}/${id}`);
+  const guitar = response.data;
+  // console.log('service >> typeof guitar.image[0]', typeof guitar.image[0]);
+  console.log('service readGuitar >> guitar', response.data);
+  return guitar;
 };
 
 const readGuitarsWithParams = async (params: Filter): Promise<Guitar[]> => {
@@ -65,7 +72,7 @@ const uploadImage = async (img: FormData): Promise<Picture[] | Picture> => {
     },
   });
   const image = response.data;
-  console.log('image', image);
+  console.log('guitar service>> image', image);
   return image;
 };
 
@@ -74,6 +81,7 @@ const guitarService = {
   readGuitars,
   updateGuitar,
   deleteGuitar,
+  readGuitar,
   readGuitarsWithParams,
   shopGuitars,
   uploadImage,
