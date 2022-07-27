@@ -41,8 +41,15 @@ export class GuitarsController {
   }
 
   @Get()
-  findAll(@Query() query: QueryInt) {
-    return this.guitarsService.findAll(query);
+  findAll(@Query() query) {
+    const hasQuery = Object.keys(query).length;
+    if (!hasQuery) return this.guitarsService.findAll();
+    else return this.guitarsService.findAllWithParams(query);
+  }
+
+  @Get('/pagination')
+  getPagination(@Query() query: QueryInt) {
+    return this.guitarsService.getPagination(query);
   }
 
   @UseGuards(JwtAuthGuard)

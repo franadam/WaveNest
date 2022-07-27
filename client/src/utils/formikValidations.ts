@@ -1,6 +1,5 @@
 import * as Yup from 'yup';
 import { FormikValues } from 'formik';
-import { Guitar } from 'interfaces/Guitars.interface';
 import { Picture } from 'interfaces/Pictures.interface';
 
 export interface MyFormikValues extends FormikValues {

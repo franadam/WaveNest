@@ -1,32 +1,46 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Moment from 'react-moment';
-import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
-import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
-import { Table, Modal, Button } from 'react-bootstrap';
+import { Table, Modal, Button, Pagination } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
 import { Loader } from './Loader.component';
 import { Guitar } from 'interfaces/Guitars.interface';
+import { Column, Order, Page, Sort } from 'interfaces/Filter.interface';
 
 interface Props {
   products: Guitar[];
+  headers: Column[];
   isModalOpen: boolean;
+  pageProps: Page;
+  sortIcon: (head: Column, sort: Sort) => JSX.Element | '️↕️';
   openModal: (id: number) => void;
   closeModal: () => void;
   deleteProduct: () => void;
   sort: (key: keyof Guitar, order: number) => Guitar[];
   gotoEdit: (id: number) => void;
+  gotoPage: React.Dispatch<React.SetStateAction<number>>;
 }
 
 export const ProductsTable: React.FC<Props> = ({
   products,
   isModalOpen,
+  pageProps,
+  headers,
   openModal,
   closeModal,
   sort,
+  sortIcon,
   deleteProduct,
   gotoEdit,
+  gotoPage,
 }) => {
-  console.log('products', products);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    if (products.length) {
+      setIsLoading(false);
+    }
+  }, [products.length, isLoading]);
+
   const editItem = (id: number) => {
     closeModal();
     gotoEdit(id);
@@ -34,48 +48,36 @@ export const ProductsTable: React.FC<Props> = ({
 
   return (
     <div>
-      {products.length ? (
+      {isLoading ? (
+        <Loader full={true} />
+      ) : !isLoading && !products.length ? (
+        <h5>
+          Oops, we did not find what you were looking for... Reset your search
+        </h5>
+      ) : (
         <>
           <Table striped bordered hover>
             <thead>
               <tr>
-                <th>
-                  Created
-                  <>
-                    <div onClick={() => sort('created_at', -1)}>
-                      <ArrowDropUpIcon />
-                    </div>
-                    <div onClick={() => sort('created_at', 1)}>
-                      <ArrowDropDownIcon />
-                    </div>
-                  </>
-                </th>
-                <th>
-                  Model
-                  <>
-                    <div onClick={() => sort('created_at', -1)}>
-                      <ArrowDropUpIcon />
-                    </div>
-                    <div onClick={() => sort('created_at', 1)}>
-                      <ArrowDropDownIcon />
-                    </div>
-                  </>
-                </th>
-                <th>
-                  Available
-                  <>
-                    <div onClick={() => sort('created_at', -1)}>
-                      <ArrowDropUpIcon />
-                    </div>
-                    <div onClick={() => sort('created_at', 1)}>
-                      <ArrowDropDownIcon />
-                    </div>
-                  </>
-                </th>
+                {headers.map((head) => {
+                  <th key={head.filter}>{head.label}</th>;
+                  const order = pageProps.sort.order === Order.ASC ? 1 : -1;
+                  return (
+                    <th key={head.filter}>
+                      <span>{head.label}</span>
+                      <button
+                        style={{ border: 'navy', background: 'none' }}
+                        onClick={() => sort(head.filter, order)}
+                      >
+                        {sortIcon(head, pageProps.sort)}
+                      </button>
+                    </th>
+                  );
+                })}
               </tr>
             </thead>
             <tbody>
-              {products.map((guitar) => (
+              {pageProps.calculatedRows.map((guitar) => (
                 <tr key={guitar.id}>
                   <td>
                     <Moment to={guitar.created_at} />
@@ -99,13 +101,39 @@ export const ProductsTable: React.FC<Props> = ({
             </tbody>
           </Table>
 
+          <Pagination>
+            {pageProps.activePage > 1 && (
+              <>
+                <Pagination.Prev
+                  onClick={() => gotoPage((activePage) => activePage - 1)}
+                />
+                <Pagination.Item
+                  onClick={() => gotoPage((activePage) => activePage - 1)}
+                >
+                  {pageProps.activePage - 1}
+                </Pagination.Item>
+              </>
+            )}
+            <Pagination.Item active>{pageProps.activePage}</Pagination.Item>
+
+            {pageProps.activePage < pageProps.totalPages && (
+              <>
+                <Pagination.Item
+                  onClick={() => gotoPage((activePage) => activePage + 1)}
+                >
+                  {pageProps.activePage + 1}
+                </Pagination.Item>
+                <Pagination.Next
+                  onClick={() => gotoPage((activePage) => activePage + 1)}
+                />
+              </>
+            )}
+          </Pagination>
           <hr />
           <LinkContainer to="/dashboard/admin/add_product">
             <Button variant="secondary">Add product</Button>
           </LinkContainer>
         </>
-      ) : (
-        <Loader full={true} />
       )}
       <Modal show={isModalOpen} onHide={closeModal}>
         <Modal.Header>

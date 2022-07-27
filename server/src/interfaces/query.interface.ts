@@ -5,6 +5,7 @@ export interface QueryInt {
   sortBy: string;
   limit: string;
   skip: string;
+  page: string;
 }
 
 export interface Shopping {

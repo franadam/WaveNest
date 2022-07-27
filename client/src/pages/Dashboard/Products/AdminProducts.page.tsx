@@ -1,23 +1,33 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { useNavigate } from 'react-router-dom';
+import moment from 'moment';
 import { Button, TextField } from '@mui/material';
 import { DashboardHoc } from 'hoc/Dashboard.hoc';
+import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import { useAppDispatch, useAppSelector } from 'hooks/use-type-selector.hook';
 import { ProductsTable } from 'components/ProductsTable.component';
 import { ToastType } from 'interfaces/ToastType.enum';
 import { clearNotifications } from 'store/reducers/notifications.reducer';
 import { errorsHelper } from 'utils/formik.errorsHelper';
 import { Guitar } from 'interfaces/Guitars.interface';
-import { deleteGuitar, getGuitars } from 'store/reducers/guitars.reducer';
-import guitarService from 'services/guitars.service';
+import {
+  deleteGuitar,
+  getGuitars,
+  selectAllGuitars,
+} from 'store/reducers/guitars.reducer';
+import { Column, Order, Page, Sort } from 'interfaces/Filter.interface';
+import { Brand } from 'interfaces/Brands.interface';
+import { Picture } from 'interfaces/Pictures.interface';
 
 export const AdminProducts: React.FC = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
   const notifications = useAppSelector(({ notifications }) => notifications);
+  const allGuitars = useAppSelector((state) => selectAllGuitars(state));
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [query, setQuery] = useState('');
@@ -25,29 +35,29 @@ export const AdminProducts: React.FC = () => {
   const [products, setProducts] = useState<Guitar[]>([]);
   const [idToRemove, setIdToRemove] = useState(0);
 
+  const [sort, setSort] = useState<Sort>({
+    order: Order.DESC,
+    key: 'created_at',
+  });
+
+  const [activePage, setActivePage] = useState(1);
+  const limit = 10;
+
   const fetchGuitars = async () => {
-    const data = await guitarService.readGuitars();
-    setProducts(data);
+    setProducts(allGuitars);
   };
 
   useEffect(() => {
-    // dispatch(getGuitars());
-    fetchGuitars();
+    dispatch(getGuitars());
   }, []);
 
   useEffect(() => {
-    closeModal();
-    setIsModalOpen(false);
-    if (notifications && notifications.type !== ToastType.ERROR) {
-      // navigate('/dashboard', { replace: true });
-      dispatch(clearNotifications());
-    }
-  }, [dispatch, notifications, products]);
+    fetchGuitars();
+  }, [allGuitars]);
 
   useEffect(() => {
     if (notifications && notifications.type === ToastType.DELETE_SUCCESS) {
       navigate('/dashboard/admin/manage_products', { replace: true });
-      dispatch(getGuitars());
       dispatch(clearNotifications());
     }
   }, [notifications, dispatch, navigate]);
@@ -55,15 +65,7 @@ export const AdminProducts: React.FC = () => {
   const deleteProduct = () => {
     closeModal();
     dispatch(deleteGuitar(idToRemove));
-    const filtered = products.filter((guitar) => {
-      console.log(
-        'guitar.id !== idToRemove :>> ',
-        guitar.id,
-        idToRemove,
-        guitar.id !== idToRemove
-      );
-      return guitar.id !== idToRemove;
-    });
+    const filtered = products.filter((guitar) => guitar.id !== idToRemove);
     setProducts(filtered);
   };
 
@@ -80,6 +82,7 @@ export const AdminProducts: React.FC = () => {
 
   const resetSearch = () => {
     fetchGuitars();
+    setQuery('');
   };
 
   const formik = useFormik({
@@ -90,36 +93,116 @@ export const AdminProducts: React.FC = () => {
     validationSchema: Yup.object({
       query: Yup.string().min(4, '4 char min').max(30, '30 char max'),
     }),
-    onSubmit: (values) => {
-      console.log('values', values.query);
-      // dispatch(shopping());
-      // const fil = {
-      //   sortBy: 'model',
-      //   order: Order.ASC,
-      //   skip: 0,
-      //   limit: 10,
-      //   price: [560, 5654],
-      // };
-      // setFilter(fil);
-      filter(query);
+    onSubmit: () => {
+      console.log('query', query);
+      filterRows(allGuitars, query);
     },
   });
 
-  const filter = (key: Date | string | number) => {
-    const filtered = products.filter((guitar) => {
-      if (typeof key === 'string') return guitar.model.includes(key);
-      else return guitar.available >= key;
+  const filterRows = (rows: Guitar[], filters: string) => {
+    if (!filters) return rows;
+
+    const filtered = rows.filter((row) => {
+      if (filters.match(/^\d*$/)) {
+        return row.available >= +filters;
+      }
+
+      const times = [
+        'years',
+        'months',
+        'weeks',
+        'days',
+        'minutes',
+        'year',
+        'month',
+        'week',
+        'day',
+        'minute',
+      ];
+
+      if (times.includes(filters.split(' ').slice(-1).join(''))) {
+        const createdAt = moment(row.created_at).toNow(true);
+        const res = filters.toLowerCase().match(`${createdAt.slice(0, -1)}`);
+        return !!res;
+      }
+
+      return row.model.toLowerCase().includes(filters.toLowerCase());
     });
+    console.log('filtered :>> ', filtered);
     setProducts(filtered);
+    return filtered;
   };
 
-  const sort = (key: keyof Guitar, order: number) => {
+  const sortHelper = (
+    order: number,
+    A: string | number | boolean | Brand | Picture[],
+    B: string | number | boolean | Brand | Picture[]
+  ) => {
+    if (A > B) return order;
+    else return -order;
+  };
+
+  const handleSort = (key: keyof Guitar, order: number) => {
+    setActivePage(1);
+    setSort((prevSort) => ({
+      order:
+        prevSort.order === Order.ASC && prevSort.key === key
+          ? Order.DESC
+          : Order.ASC,
+      key,
+    }));
     const sorted = products.sort((a: Guitar, b: Guitar) => {
-      if (a[key] > b[key]) return order;
-      else return -order;
+      const A = a[key];
+      const B = b[key];
+      if (typeof A === 'string' && typeof B === 'string') {
+        return sortHelper(
+          order,
+          A.toLowerCase().split(/s*/).join(''),
+          B.toLowerCase().split(/s*/).join('')
+        );
+      } else {
+        return sortHelper(order, A, B);
+      }
     });
+    console.log('sorted', key, order, sorted);
     setProducts(sorted);
     return sorted;
+  };
+
+  const headers: { label: string; filter: keyof Guitar }[] = [
+    { label: 'Created', filter: 'created_at' },
+    { label: 'Model', filter: 'model' },
+    { label: 'Available', filter: 'available' },
+  ];
+
+  const calculatedRows = products.slice(
+    (activePage - 1) * limit,
+    activePage * limit
+  );
+
+  const count = products.length;
+
+  const totalPages = Math.ceil(count / limit);
+
+  const pageProps = {
+    activePage,
+    limit,
+    calculatedRows,
+    count,
+    totalPages,
+    sort,
+  };
+
+  const sortIcon = (head: Column, sort: Sort) => {
+    if (head.filter === sort.key) {
+      console.log('order.order', head.filter, sort.order);
+      if (sort.order === Order.ASC) {
+        return <ArrowDropUpIcon />; //'⬆️';
+      }
+      return <ArrowDropDownIcon />; //'⬇️';
+    } else {
+      return '️↕️';
+    }
   };
 
   return (
@@ -141,7 +224,7 @@ export const AdminProducts: React.FC = () => {
                 variant="outlined"
                 {...formik.getFieldProps('query')}
                 {...errorsHelper(formik, 'query')}
-                onChange={(e) => setQuery(e.currentTarget.value)}
+                onChange={(e) => setQuery(e.target.value)}
                 value={query}
               />
             </div>
@@ -168,12 +251,16 @@ export const AdminProducts: React.FC = () => {
         <hr />
         <ProductsTable
           products={products}
+          headers={headers}
+          isModalOpen={isModalOpen}
+          pageProps={pageProps}
           openModal={openModal}
           closeModal={closeModal}
-          isModalOpen={isModalOpen}
           deleteProduct={deleteProduct}
-          sort={sort}
+          sortIcon={sortIcon}
+          sort={handleSort}
           gotoEdit={gotoEdit}
+          gotoPage={setActivePage}
         />
       </div>
     </DashboardHoc>

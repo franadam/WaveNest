@@ -10,7 +10,7 @@ interface Props {
 
 export const CardBlock: React.FC<Props> = ({ title, items, shop }) => {
   const renderCards = () =>
-    items
+    items.length
       ? items.map((item) => <Card key={item.id} item={item} grid={false} />)
       : null;
 

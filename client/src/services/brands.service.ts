@@ -7,19 +7,16 @@ const baseUrl = 'http://localhost:5000/api/guitars/brands';
 const createBrand = async (g: Brand): Promise<Brand> => {
   const response = await axios.post(`${baseUrl}`, g);
   const brand = response.data;
-  console.log('brand', brand);
   return brand;
 };
 
 const readBrands = async (): Promise<Brand[]> => {
   const response = await axios(`${baseUrl}`);
-  console.log('service >> response.data', response.data);
   return response.data;
 };
 
 const readBrand = async (id: number): Promise<Brand> => {
   const response = await axios(`${baseUrl}/${id}`);
-  console.log('service >> response.data', response.data);
   return response.data;
 };
 
@@ -31,7 +28,6 @@ const updateBrand = async (
     headers: { Authorization: `Bearer ${authService.getToken()}` },
   });
   const brand = response.data;
-  console.log('brand', brand);
   return brand;
 };
 
@@ -40,7 +36,6 @@ const deleteBrand = async (id: number): Promise<Brand> => {
     headers: { Authorization: `Bearer ${authService.getToken()}` },
   });
   const brand = response.data;
-  console.log('brand', brand);
   return brand;
 };
 

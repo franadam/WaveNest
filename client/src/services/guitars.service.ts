@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { Filter } from 'interfaces/Filter.interface';
+import { Filter, Page, Query } from 'interfaces/Filter.interface';
 import { Guitar } from 'interfaces/Guitars.interface';
 import { Picture } from 'interfaces/Pictures.interface';
 import { authService } from './users.service';
@@ -11,19 +11,18 @@ const createGuitar = async (g: any): Promise<Guitar> => {
     headers: { Authorization: `Bearer ${authService.getToken()}` },
   });
   const guitar = response.data;
-  // console.log('typeof guitar.image[0]', typeof guitar.image[0]);
   return guitar;
 };
 
 const readGuitars = async (): Promise<Guitar[]> => {
   const response = await axios(`${baseUrl}`);
+  console.log('service readGuitar >> guitar', response.data);
   return response.data;
 };
 
 const readGuitar = async (id: number): Promise<Guitar> => {
   const response = await axios(`${baseUrl}/${id}`);
   const guitar = response.data;
-  // console.log('service >> typeof guitar.image[0]', typeof guitar.image[0]);
   console.log('service readGuitar >> guitar', response.data);
   return guitar;
 };
@@ -31,7 +30,7 @@ const readGuitar = async (id: number): Promise<Guitar> => {
 const readGuitarsWithParams = async (params: Filter): Promise<Guitar[]> => {
   const response = await axios(`${baseUrl}`, { params }); //sortBy=model&order=des&limit=10&skip=1
   const guitars = response.data;
-  console.log('guitars', guitars);
+  console.log('service guitars>> readGuitarsWithParams', guitars);
   return guitars;
 };
 
@@ -43,7 +42,6 @@ const updateGuitar = async (
     headers: { Authorization: `Bearer ${authService.getToken()}` },
   });
   const guitar = response.data;
-  console.log('guitar', guitar);
   return guitar;
 };
 
@@ -63,8 +61,14 @@ const shopGuitars = async (filter: Filter): Promise<Guitar[]> => {
   return guitars;
 };
 
+const fetchPagination = async (params: Query): Promise<Page> => {
+  const response = await axios(`${baseUrl}/pagination`, { params });
+  const pagination = response.data;
+  console.log('pagination', pagination);
+  return pagination;
+};
+
 const uploadImage = async (img: FormData): Promise<Picture[] | Picture> => {
-  console.log('uploadImage', img);
   const response = await axios.post(`${baseUrl}/upload`, img, {
     headers: {
       'content-type': 'multipart/form-data',
@@ -72,7 +76,6 @@ const uploadImage = async (img: FormData): Promise<Picture[] | Picture> => {
     },
   });
   const image = response.data;
-  console.log('guitar service>> image', image);
   return image;
 };
 
@@ -85,6 +88,7 @@ const guitarService = {
   readGuitarsWithParams,
   shopGuitars,
   uploadImage,
+  fetchPagination,
 };
 
 export default guitarService;

@@ -18,7 +18,6 @@ export interface Guitar extends ServerGuitar {
   brand: Brand;
   description: string;
   price: number;
-  available: number;
   itemSold: number;
   images: Picture[];
 }

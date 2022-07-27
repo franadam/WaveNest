@@ -1,8 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Brand } from 'src/brands/entities/brand.entity';
 import { Order, Filter, QueryInt } from 'src/interfaces/Query.interface';
-import { Between, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { CreateGuitarDto } from './dto/create-guitar.dto';
 import { UpdateGuitarDto } from './dto/update-guitar.dto';
 import { Guitar } from './entities/guitar.entity';
@@ -13,13 +12,9 @@ export class GuitarsService {
     @InjectRepository(Guitar) private readonly guitarRepo: Repository<Guitar>,
   ) {}
 
-  async create(createGuitarDto: CreateGuitarDto) {
-    console.log('service guitar>> createGuitarDto', createGuitarDto);
+  create(createGuitarDto: CreateGuitarDto) {
     const guitar = this.guitarRepo.create(createGuitarDto);
-    console.log('service guitar>>', guitar);
-    const saved = await this.guitarRepo.save(guitar);
-    console.log('service guitar>> saved', saved);
-    return saved;
+    return this.guitarRepo.save(guitar);
   }
 
   // {
@@ -33,13 +28,32 @@ export class GuitarsService {
   //     "frets" : 22,
   //     "publish" : true
   // }
-  findAll(query: QueryInt) {
-    const order = query.order ? query.order.toUpperCase() : 'ASC';
-    const sortBy = query.sortBy ? query.sortBy : 'id';
-    const take = query.limit ? parseInt(query.limit) : 100;
-    const skip = query.skip ? parseInt(query.skip) : 0;
 
+  async findAll() {
     return this.guitarRepo.find({
+      relations: {
+        brand: true,
+      },
+    });
+  }
+
+  async findAllWithParams(query: QueryInt) {
+    // const order = query.order ? query.order.toUpperCase() : 'ASC';
+    // const sortBy = query.sortBy ? query.sortBy : 'id';
+    // const take = query.limit ? parseInt(query.limit) : 100;
+    // const page = query.page ? parseInt(query.page) : 1;
+    // const skip = (page - 1) * take; // query.skip ? parseInt(query.skip) : 0;
+
+    const {
+      order,
+      sortBy,
+      skip,
+      limit: take,
+      total,
+      current,
+    } = await this.getPagination(query);
+
+    const guitars = await this.guitarRepo.find({
       order: { [sortBy]: order },
       skip,
       take,
@@ -47,6 +61,7 @@ export class GuitarsService {
         brand: true,
       },
     });
+    return guitars; //{guitars, count:total, currentPage:current}
   }
 
   async findOne(id: number) {
@@ -56,7 +71,6 @@ export class GuitarsService {
         brand: true,
       },
     });
-    console.log('service >> guitar', guitar);
     return guitar;
   }
 
@@ -72,11 +86,32 @@ export class GuitarsService {
     return this.guitarRepo.remove(guitar);
   }
 
+  async countDocuments() {
+    const guitars = await this.guitarRepo.find();
+    return guitars.length;
+  }
+
+  async getPagination(query: QueryInt) {
+    const order = query.order ? query.order.toUpperCase() : 'ASC';
+    const sortBy = query.sortBy ? query.sortBy : 'id';
+    const limit = query.limit ? parseInt(query.limit) : 10;
+    const current = query.page ? parseInt(query.page) : 1;
+    const skip = (current - 1) * limit; // query.skip ? parseInt(query.skip) : 0;
+    const count = await this.countDocuments();
+    const total = Math.ceil(count / limit);
+    const pagination = { order, sortBy, limit, current, skip, total };
+    console.log('pagination', pagination);
+    return pagination;
+  }
+
   async shopping(filters: Filter) {
-    const order = filters.order ? filters.order.toUpperCase() : 'DESC';
-    const sortBy = filters.sortBy ? filters.sortBy : 'model';
-    const limit = filters.limit ? parseInt(filters.limit) : 10;
-    const skip = filters.skip ? parseInt(filters.skip) : 0;
+    // const order = filters.order ? filters.order.toUpperCase() : 'DESC';
+    // const sortBy = filters.sortBy ? filters.sortBy : 'model';
+    // const limit = filters.limit ? parseInt(filters.limit) : 10;
+    // const skip = filters.skip ? parseInt(filters.skip) : 0;
+
+    const { order, sortBy, skip, limit, total, current } =
+      await this.getPagination(filters);
 
     const guitars = await this.guitarRepo
       .createQueryBuilder('guitars')

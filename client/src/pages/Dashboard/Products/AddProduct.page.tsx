@@ -61,13 +61,13 @@ export const AddProduct: React.FC = () => {
     validationSchema: productFormValidations,
     onSubmit: (values) => {
       const newGuitar = {
-        model: values.model,
-        description: values.description,
+        model: values.model.trim(),
+        description: values.description.trim(),
         price: +values.price,
         brand: values.brand,
         shipping: values.shipping,
         available: +values.available,
-        wood: values.wood,
+        wood: values.wood.trim(),
         frets: +values.frets,
         publish: values.shipping,
         images: values.images,
