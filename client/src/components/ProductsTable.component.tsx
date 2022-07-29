@@ -5,6 +5,7 @@ import { LinkContainer } from 'react-router-bootstrap';
 import { Loader } from './Loader.component';
 import { Guitar } from 'interfaces/Guitars.interface';
 import { Column, Order, Page, Sort } from 'interfaces/Filter.interface';
+import { CustomPagination } from './Pagination.component';
 
 interface Props {
   products: Guitar[];
@@ -101,34 +102,13 @@ export const ProductsTable: React.FC<Props> = ({
             </tbody>
           </Table>
 
-          <Pagination>
-            {pageProps.activePage > 1 && (
-              <>
-                <Pagination.Prev
-                  onClick={() => gotoPage((activePage) => activePage - 1)}
-                />
-                <Pagination.Item
-                  onClick={() => gotoPage((activePage) => activePage - 1)}
-                >
-                  {pageProps.activePage - 1}
-                </Pagination.Item>
-              </>
-            )}
-            <Pagination.Item active>{pageProps.activePage}</Pagination.Item>
+          <CustomPagination
+            products={products}
+            activePage={pageProps.activePage}
+            totalPages={pageProps.totalPages}
+            gotoPage={gotoPage}
+          />
 
-            {pageProps.activePage < pageProps.totalPages && (
-              <>
-                <Pagination.Item
-                  onClick={() => gotoPage((activePage) => activePage + 1)}
-                >
-                  {pageProps.activePage + 1}
-                </Pagination.Item>
-                <Pagination.Next
-                  onClick={() => gotoPage((activePage) => activePage + 1)}
-                />
-              </>
-            )}
-          </Pagination>
           <hr />
           <LinkContainer to="/dashboard/admin/add_product">
             <Button variant="secondary">Add product</Button>

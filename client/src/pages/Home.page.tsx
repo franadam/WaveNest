@@ -33,7 +33,7 @@ export const Home: React.FC = () => {
         <CardBlock
           title="best selling guitars"
           items={allGuitars.sort((a, b) => b.itemSold - a.itemSold)}
-          shop={false}
+          grid={false}
         />
       ) : (
         <Loader />
@@ -46,7 +46,7 @@ export const Home: React.FC = () => {
             if (b.created_at < a.created_at) return 1;
             else return 0;
           })}
-          shop={false}
+          grid={false}
         />
       ) : (
         <Loader />

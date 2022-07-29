@@ -4,19 +4,19 @@ import { Card } from './Card.component';
 
 interface Props {
   items: Guitar[];
-  title: string;
-  shop: boolean;
+  title?: string;
+  grid: boolean;
 }
 
-export const CardBlock: React.FC<Props> = ({ title, items, shop }) => {
+export const CardBlock: React.FC<Props> = ({ title, items, grid }) => {
   const renderCards = () =>
     items.length
-      ? items.map((item) => <Card key={item.id} item={item} grid={false} />)
+      ? items.map((item) => <Card key={item.id} item={item} grid={grid} />)
       : null;
 
   return (
-    <div className={shop ? 'card_block_shop' : 'card_block'}>
-      <div className={shop ? '' : 'container'}>
+    <div className={grid ? 'card_block_shop' : 'card_block'}>
+      <div className={grid ? '' : 'container'}>
         {title ? <div className="title">{title}</div> : null}
       </div>
       <div style={{ display: 'flex', flexWrap: 'wrap' }}>{renderCards()}</div>

@@ -110,7 +110,7 @@ export const EditProduct: React.FC = () => {
     },
   });
 
-  const fields = Object.keys(formik.values).slice(0, -7);
+  const fields = Object.keys(formik.values).slice(0, -6);
 
   const handlePictureValue = (picture: Picture) => {
     const pictures = formik.values.images.filter((img) => img.id !== '');
