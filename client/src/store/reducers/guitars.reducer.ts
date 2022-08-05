@@ -3,7 +3,7 @@ import {
   createSlice,
   createEntityAdapter,
 } from '@reduxjs/toolkit';
-import { Filter } from 'interfaces/Filter.interface';
+import { Filter, Shopping } from 'interfaces/Filter.interface';
 import { Guitar } from 'interfaces/Guitars.interface';
 import { ToastType } from 'interfaces/ToastType.enum';
 import guitarService from 'services/guitars.service';
@@ -146,9 +146,9 @@ export const getGuitarsWithParams = createAsyncThunk(
 
 export const shopping = createAsyncThunk(
   'guitars/shopping',
-  async (payload: Filter, thunkApi) => {
+  async (payload: Shopping, thunkApi) => {
     try {
-      const guitars = await guitarService.shopGuitars(payload);
+      const guitars = await guitarService.shopping(payload);
       return guitars;
     } catch (err: any) {
       const error = customError(err.response.data);

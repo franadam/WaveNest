@@ -51,7 +51,6 @@ export const getBrands = createAsyncThunk(
           type: ToastType.READ_SUCCESS,
         })
       );
-      console.log('reducer brands', brands);
       return brands;
     } catch (err: any) {
       const error = customError(err.response.data);
@@ -72,7 +71,6 @@ export const getBrandById = createAsyncThunk(
           type: ToastType.READ_SUCCESS,
         })
       );
-      console.log('reducer brand', brand);
       return brand;
     } catch (err: any) {
       const error = customError(err.response.data);

@@ -1,17 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { useFormik } from 'formik';
-import * as Yup from 'yup';
 import { useNavigate } from 'react-router-dom';
-import moment from 'moment';
-import { Button, TextField } from '@mui/material';
-import { DashboardHoc } from 'hoc/Dashboard.hoc';
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import { DashboardHoc } from 'hoc/Dashboard.hoc';
 import { useAppDispatch, useAppSelector } from 'hooks/use-type-selector.hook';
 import { ProductsTable } from 'components/ProductsTable.component';
 import { ToastType } from 'interfaces/ToastType.enum';
 import { clearNotifications } from 'store/reducers/notifications.reducer';
-import { errorsHelper } from 'utils/formik.errorsHelper';
 import { Guitar } from 'interfaces/Guitars.interface';
 import {
   deleteGuitar,
@@ -19,8 +14,6 @@ import {
   selectAllGuitars,
 } from 'store/reducers/guitars.reducer';
 import { Column, Order, Page, Sort } from 'interfaces/Filter.interface';
-import { Brand } from 'interfaces/Brands.interface';
-import { Picture } from 'interfaces/Pictures.interface';
 import paginationHelper from 'utils/pagination';
 import { SearchBar } from 'components/SearchBar.component';
 
@@ -86,20 +79,6 @@ export const AdminProducts: React.FC = () => {
     fetchGuitars();
     setQuery('');
   };
-
-  const formik = useFormik({
-    enableReinitialize: true,
-    initialValues: {
-      query: '',
-    },
-    validationSchema: Yup.object({
-      query: Yup.string().min(4, '4 char min').max(30, '30 char max'),
-    }),
-    onSubmit: () => {
-      console.log('query', query);
-      filterRows(query, allGuitars);
-    },
-  });
 
   const filterRows = (filters: string, rows: Guitar[]) => {
     const filtered = paginationHelper.filterRows(filters, rows);

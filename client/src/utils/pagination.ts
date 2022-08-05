@@ -8,7 +8,7 @@ const filterRows = (filters: string, rows: Guitar[]) => {
 
   const filtered = rows.filter((row) => {
     if (filters.match(/^\d*$/)) {
-      return row.available >= +filters;
+      return row.available === +filters;
     }
 
     const times = [
@@ -27,6 +27,7 @@ const filterRows = (filters: string, rows: Guitar[]) => {
     if (times.includes(filters.split(' ').slice(-1).join(''))) {
       const createdAt = moment(row.created_at).toNow(true);
       const res = filters.toLowerCase().match(`${createdAt.slice(0, -1)}`);
+      // console.log('createdAt, res', createdAt, res);
       return !!res;
     }
 
@@ -71,3 +72,97 @@ const paginationHelper = {
 };
 
 export default paginationHelper;
+
+/*
+
+const times = [
+  'years',
+  'months',
+  'weeks',
+  'days',
+  'minutes',
+  'year',
+  'month',
+  'week',
+  'day',
+  'minute',
+];
+
+const filterHelper = (
+  category: keyof Guitar,
+  type: 'string' | 'number' | 'date',
+  filters: string,
+  row: Guitar
+) => {
+  switch (type) {
+    case 'number':
+      return row[category] === +filters;
+    case 'string':
+      if (times.includes(filters.split(' ').slice(-1).join(''))) {
+        const createdAt = moment(row.created_at).toNow(true);
+        const res = filters.toLowerCase().match(`${createdAt.slice(0, -1)}`);
+        return !!res;
+      }
+      return row.model.toLowerCase().includes(filters.toLowerCase());
+
+    case 'date':
+      return row[category] === filters;
+
+    default:
+      break;
+  }
+
+  /* 
+  if (type === 'number') {
+    return row[category] === +filters;
+  }
+
+  if (type ==='string') {
+    if (times.includes(filters.split(' ').slice(-1).join(''))) {
+      const createdAt = moment(row.created_at).toNow(true);
+      const res = filters.toLowerCase().match(`${createdAt.slice(0, -1)}`);
+      return !!res;
+    }
+    return row.model.toLowerCase().includes(filters.toLowerCase());
+  }
+
+  if (type === 'date') {
+    return row[category] == filters;
+  } */
+
+/*
+};
+
+const filterRows = (filters: string, rows: Guitar[]) => {
+  if (!filters) return rows;
+
+  const filtered = rows.filter((row) => {
+    if (filters.match(/^\d*$/)) {
+      return filterHelper('frets', 'number', filters, row);
+    }
+
+    if ('')
+      if (times.includes(filters.split(' ').slice(-1).join(''))) {
+        const createdAt = moment(row.created_at).toNow(true);
+        const res = filters.toLowerCase().match(`${createdAt.slice(0, -1)}`);
+        return !!res;
+      }
+
+    return row.model.toLowerCase().includes(filters.toLowerCase());
+  });
+  console.log('filtered :>> ', filtered);
+
+  return filtered;
+};
+
+const sortHelper = (
+  order: number,
+  A: string | number | boolean | Brand | Picture[],
+  B: string | number | boolean | Brand | Picture[]
+) => {
+  if (A > B) return order;
+  else return -order;
+};
+
+
+*/

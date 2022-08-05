@@ -42,16 +42,14 @@ export interface Page {
 }
 
 export interface Shopping {
-  model: string;
-  brand: string;
-  frets: number;
-  wood: string;
-  description: string;
-  price: number[] | string[];
-  available: number;
-  itemSold: number;
+  model?: string;
+  brands: number[];
+  frets: number[];
+  // wood: string[];
+  prices: number[];
+  available?: number;
   shipping: boolean;
-  images: boolean;
+  // images: boolean;
 }
 
 export interface Filter extends Query, Shopping {}

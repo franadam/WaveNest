@@ -10,19 +10,19 @@ export interface QueryInt {
 
 export interface Shopping {
   model: string;
-  brand: string;
-  frets: number;
-  wood: string;
-  description: string;
-  price: number[] | string[];
+  brands: number[];
+  frets: number[];
+  // wood: string;
+  // description: string;
+  prices: number[];
   available: number;
-  itemSold: number;
+  // itemSold: number;
   shipping: boolean;
-  images: boolean;
+  // images: boolean;
 }
 
 export interface BodyInt {
-  filters: Filter;
+  filters: Shopping;
 }
 
 export interface Filter extends QueryInt, Shopping {}

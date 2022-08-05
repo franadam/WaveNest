@@ -1,6 +1,12 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Order, Filter, QueryInt } from 'src/interfaces/Query.interface';
+import { Brand } from 'src/brands/entities/brand.entity';
+import {
+  Order,
+  Filter,
+  QueryInt,
+  Shopping,
+} from 'src/interfaces/Query.interface';
 import { Repository } from 'typeorm';
 import { CreateGuitarDto } from './dto/create-guitar.dto';
 import { UpdateGuitarDto } from './dto/update-guitar.dto';
@@ -10,6 +16,7 @@ import { Guitar } from './entities/guitar.entity';
 export class GuitarsService {
   constructor(
     @InjectRepository(Guitar) private readonly guitarRepo: Repository<Guitar>,
+    @InjectRepository(Brand) private brandRepo: Repository<Brand>,
   ) {}
 
   create(createGuitarDto: CreateGuitarDto) {
@@ -104,26 +111,51 @@ export class GuitarsService {
     return pagination;
   }
 
-  async shopping(filters: Filter) {
+  async shopping(filters: Shopping) {
     // const order = filters.order ? filters.order.toUpperCase() : 'DESC';
     // const sortBy = filters.sortBy ? filters.sortBy : 'model';
     // const limit = filters.limit ? parseInt(filters.limit) : 10;
     // const skip = filters.skip ? parseInt(filters.skip) : 0;
 
-    const { order, sortBy, skip, limit, total, current } =
-      await this.getPagination(filters);
-
+    // const { order, sortBy, skip, limit, total, current } =
+    //   await this.getPagination(filters);
+    console.log('filters', filters);
     const guitars = await this.guitarRepo
       .createQueryBuilder('guitars')
-      .leftJoinAndSelect('guitars.brand', 'brand')
+      .innerJoinAndSelect(
+        'guitars.brand',
+        'brands',
+        'brands.id IN (:...brands_ids)',
+        {
+          brands_ids: filters.brands,
+        },
+      )
       .where('guitars.price BETWEEN  :minprice AND :maxprice', {
-        minprice: filters.price[0],
-        maxprice: filters.price[1],
+        minprice: filters.prices[0],
+        maxprice: filters.prices[1],
       })
-      .limit(limit)
-      .offset(skip)
-      .orderBy(sortBy, order as Order)
+      .andWhere('guitars.frets IN (:...frets_ids)', {
+        frets_ids: filters.frets,
+      })
+      .andWhere('guitars.shipping = :shipping ', {
+        shipping: filters.shipping,
+      })
+      .andWhere('guitars.available > :available ', {
+        available: filters.available,
+      })
+      // .andWhere('guitars.model > :model ', {
+      //   model: filters.model,
+      // })
+      // .andWhere('brands.id IN (:...brands_ids)', {
+      //   brands_ids: filters.brands,
+      // })
+      // .limit(limit)
+      // .offset(skip)
+      // .orderBy(sortBy, order as Order)
       .getMany();
+
+    console.log('service >> guitars', guitars);
+    console.log('service >> filters.available', filters.available);
 
     const filteredGuitars = guitars.filter((guitar) => {
       let isValid = true;
@@ -134,6 +166,7 @@ export class GuitarsService {
       return isValid;
     });
 
-    return filteredGuitars;
+    console.log('service >> filteredGuitars', filteredGuitars);
+    return guitars;
   }
 }

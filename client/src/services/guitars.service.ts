@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { Filter, Page, Query } from 'interfaces/Filter.interface';
+import { Filter, Page, Query, Shopping } from 'interfaces/Filter.interface';
 import { Guitar } from 'interfaces/Guitars.interface';
 import { Picture } from 'interfaces/Pictures.interface';
 import { authService } from './users.service';
@@ -54,8 +54,11 @@ const deleteGuitar = async (id: number): Promise<Guitar> => {
   return guitar;
 };
 
-const shopGuitars = async (filter: Filter): Promise<Guitar[]> => {
-  const response = await axios.post(`${baseUrl}/shop`, filter);
+const shopping = async (filter: Shopping): Promise<Guitar[]> => {
+  console.log('filter', filter);
+  const response = await axios.post(`${baseUrl}/shop`, filter, {
+    headers: { Authorization: `Bearer ${authService.getToken()}` },
+  });
   const guitars = response.data;
   console.log('guitars', guitars);
   return guitars;
@@ -86,7 +89,7 @@ const guitarService = {
   deleteGuitar,
   readGuitar,
   readGuitarsWithParams,
-  shopGuitars,
+  shopping,
   uploadImage,
   fetchPagination,
 };

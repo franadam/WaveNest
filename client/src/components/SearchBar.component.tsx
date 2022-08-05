@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { useNavigate } from 'react-router-dom';
-import moment from 'moment';
 import { Button, TextField } from '@mui/material';
 import { errorsHelper } from 'utils/formik.errorsHelper';
 import { Guitar } from 'interfaces/Guitars.interface';
@@ -56,24 +55,26 @@ export const SearchBar: React.FC<Props> = ({
             name="query"
           />
         </div>
-        <Button
-          className="mb-3"
-          variant="contained"
-          color="primary"
-          size="small"
-          type="submit"
-        >
-          Search
-        </Button>
-        <Button
-          className="mb-3"
-          variant="contained"
-          color="secondary"
-          size="small"
-          onClick={() => resetSearch()}
-        >
-          Reset Search
-        </Button>
+        <div style={{ display: 'flex', justifyContent: 'center' }}>
+          <Button
+            className="mb-3"
+            variant="contained"
+            color="primary"
+            size="small"
+            type="submit"
+          >
+            Search
+          </Button>
+          <Button
+            className="mb-3"
+            variant="contained"
+            color="secondary"
+            size="small"
+            onClick={() => resetSearch()}
+          >
+            Reset Search
+          </Button>
+        </div>
       </form>
     </div>
   );

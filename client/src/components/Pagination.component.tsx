@@ -1,19 +1,11 @@
 import React from 'react';
-import { Modal, Button, Pagination } from 'react-bootstrap';
-import { Column, Page, Sort } from 'interfaces/Filter.interface';
+import { Button, Pagination } from 'react-bootstrap';
 import { Guitar } from 'interfaces/Guitars.interface';
 
 interface Props {
   products: Guitar[];
   activePage: number;
-  // limit: number;
-  // calculatedRows: Guitar[];
-  // count: number;
   totalPages: number;
-  // sort: Sort;
-  // sortIcon: (head: Column, sort: Sort) => JSX.Element | '️↕️';
-  // sort: (key: keyof Guitar, order: number) => Guitar[];
-  // gotoEdit: (id: number) => void;
   gotoPage: React.Dispatch<React.SetStateAction<number>>;
 }
 
@@ -50,7 +42,7 @@ export const CustomPagination: React.FC<Props> = ({
           {activePage < totalPages && (
             <>
               <Pagination.Item onClick={() => goToNextPage()}>
-                {activePage + 1}
+                {activePage < totalPages && activePage + 1}
               </Pagination.Item>
               <Pagination.Next onClick={() => goToNextPage()} />
             </>

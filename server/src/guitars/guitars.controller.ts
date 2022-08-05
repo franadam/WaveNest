@@ -17,7 +17,7 @@ import { CreateGuitarDto } from './dto/create-guitar.dto';
 import { UpdateGuitarDto } from './dto/update-guitar.dto';
 import { JwtAuthGuard } from 'src/auth/Guards/jwt.guard';
 import { ACGuard, UseRoles } from 'nest-access-control';
-import { BodyInt, QueryInt } from 'src/interfaces/Query.interface';
+import { BodyInt, QueryInt, Shopping } from 'src/interfaces/Query.interface';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ImagesService } from 'src/images/images.service';
 const sharp = require('sharp');
@@ -54,7 +54,8 @@ export class GuitarsController {
 
   @UseGuards(JwtAuthGuard)
   @Post('/shop')
-  shopping(@Body() { filters }: BodyInt) {
+  shopping(@Body() filters: Shopping) {
+    console.log('controller >> filters', filters);
     return this.guitarsService.shopping(filters);
   }
 
