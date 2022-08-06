@@ -1,3 +1,5 @@
+import { Guitar } from './Guitars.interface';
+
 export enum UserRole {
   ADMIN = 'ADMIN',
   USER = 'USER',
@@ -11,7 +13,7 @@ export interface User {
   email: string;
   password: string;
   roles: UserRole;
-  cart: string[];
+  cart: Guitar[];
   history: string[];
   verified: boolean;
   token: string;

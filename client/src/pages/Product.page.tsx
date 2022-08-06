@@ -2,21 +2,25 @@ import React, { useEffect, useState } from 'react';
 import { Modal } from 'react-bootstrap';
 import { Loader } from 'components/Loader.component';
 import { ProductInfo } from 'components/ProductInfo.component';
-import { useAppSelector } from 'hooks/use-type-selector.hook';
+import { useAppDispatch, useAppSelector } from 'hooks/use-type-selector.hook';
 import { Guitar } from 'interfaces/Guitars.interface';
 import { useParams } from 'react-router-dom';
 import guitarService from 'services/guitars.service';
 import { selectGuitarById } from 'store/reducers/guitars.reducer';
 import { renderCardImage } from 'utils/renderCardImage';
 import Slider from 'react-slick';
+import { addToUserCart, verifyUser } from 'store/reducers/auth.reducer';
 
-interface Props {}
-
-export const Product: React.FC<Props> = () => {
+export const Product: React.FC = () => {
   const [_, setIsLoading] = useState(false);
   const [isModalOpen, setisModalOpen] = useState(false);
+  const [errorType, setErrorType] = useState('');
   const [guitar, setGuitar] = useState<Guitar | undefined>(undefined);
+
   const { id } = useParams();
+  const { isAuth, profile: user } = useAppSelector((state) => state.auth);
+  const dispatch = useAppDispatch();
+
   // const guitar = useAppSelector(state => selectGuitarById(state,id))
   const settings = {
     dots: true,
@@ -42,6 +46,26 @@ export const Product: React.FC<Props> = () => {
     }
   }, [id]);
 
+  const verifyAccount = async () => {
+    console.log('verifyAccount');
+    dispatch(verifyUser());
+  };
+
+  const handleAddToCart = (guitar: Guitar) => {
+    if (!isAuth) {
+      setisModalOpen(true);
+      setErrorType('auth');
+      return false;
+    }
+    if (!user.verified) {
+      setisModalOpen(true);
+      setErrorType('verify');
+      return false;
+    }
+    console.log('user ', user);
+    dispatch(addToUserCart({ id: user.id, guitar }));
+  };
+
   return (
     <div className="page_container">
       <div className="page_top">
@@ -60,7 +84,14 @@ export const Product: React.FC<Props> = () => {
               </div>
             </div>
             <div className="right">
-              <ProductInfo guitar={guitar} />
+              <ProductInfo
+                guitar={guitar}
+                errorType={errorType}
+                isModalOpen={isModalOpen}
+                verifyAccount={verifyAccount}
+                closeModal={closeModal}
+                handleAddToCart={handleAddToCart}
+              />
             </div>
           </div>
         ) : (

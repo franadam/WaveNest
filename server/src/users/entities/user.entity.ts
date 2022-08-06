@@ -1,3 +1,4 @@
+import { Guitar } from 'src/guitars/entities/guitar.entity';
 import {
   Column,
   CreateDateColumn,
@@ -34,8 +35,8 @@ export class User {
   @Column('enum', { enum: UserRole, default: UserRole.USER })
   roles: UserRole;
 
-  @Column('varchar', { array: true, default: [] })
-  chart: string[];
+  @Column('jsonb', { default: [] })
+  cart: Guitar[];
 
   @Column('varchar', { array: true, default: [] })
   history: string[];

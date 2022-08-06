@@ -1,7 +1,10 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Guitar } from 'interfaces/Guitars.interface';
 import { renderCardImage } from 'utils/renderCardImage';
 import { CustomButton } from '../CustomButton.component';
+import { useAppDispatch, useAppSelector } from 'hooks/use-type-selector.hook';
+import { AddToCart } from 'components/AddToCart.component';
+import { addToUserCart, verifyUser } from 'store/reducers/auth.reducer';
 
 interface Props {
   grid: boolean;
@@ -9,8 +12,33 @@ interface Props {
 }
 
 export const Card: React.FC<Props> = ({ grid, item }) => {
-  const handleAddToCart = (guitar: Guitar): void => {
-    alert('add to cart');
+  const [isModalOpen, setisModalOpen] = useState(false);
+  const [errorType, setErrorType] = useState('');
+
+  const { isAuth, profile: user } = useAppSelector((state) => state.auth);
+
+  const dispatch = useAppDispatch();
+
+  const closeModal = () => setisModalOpen(false);
+
+  const verifyAccount = async () => {
+    console.log('verifyAccount');
+    dispatch(verifyUser());
+  };
+
+  const handleAddToCart = (guitar: Guitar) => {
+    if (!isAuth) {
+      setisModalOpen(true);
+      setErrorType('auth');
+      return false;
+    }
+    if (!user.verified) {
+      setisModalOpen(true);
+      setErrorType('verify');
+      return false;
+    }
+    console.log('user ', user);
+    dispatch(addToUserCart({ id: user.id, guitar }));
   };
 
   return (
@@ -54,6 +82,12 @@ export const Card: React.FC<Props> = ({ grid, item }) => {
           </div>
         </div>
       </div>
+      <AddToCart
+        isModalOpen={isModalOpen}
+        errorType={errorType}
+        closeModal={closeModal}
+        verifyAccount={verifyAccount}
+      />
     </div>
   );
 };

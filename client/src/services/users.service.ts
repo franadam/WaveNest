@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { Guitar } from 'interfaces/Guitars.interface';
 import { User, Credentials } from 'interfaces/Users.interface';
 
 const baseUrl = 'http://localhost:5000/api/users';
@@ -89,6 +90,34 @@ const updateEmail = async (id: number, email: string) => {
   return response.data;
 };
 
+const verifyUser = async (): Promise<User> => {
+  const token = getToken();
+  const params = { validation: token };
+  console.log('params', params);
+  const response = await axios(`${baseUrl}/verify`, {
+    params,
+    headers: { Authorization: `Bearer ${getToken()}` },
+  });
+  console.log('service user', response.data);
+  saveToken(response.data.token);
+  return response.data;
+};
+
+const addToCart = async (id: number, cart: Guitar[]): Promise<User> => {
+  const { email, ...rest } = await profile();
+  console.log('user', rest, cart);
+  const response = await axios.patch(
+    `${baseUrl}/${id}`,
+    { ...rest, cart },
+    {
+      headers: { Authorization: `Bearer ${getToken()}` },
+    }
+  );
+  console.log('service user', response.data);
+  saveToken(response.data.token);
+  return response.data;
+};
+
 const authService = {
   login,
   register,
@@ -99,6 +128,8 @@ const authService = {
   profile,
   update,
   updateEmail,
+  verifyUser,
+  addToCart,
 };
 
 const usersService = { fetchUsers };

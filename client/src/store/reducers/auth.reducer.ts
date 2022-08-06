@@ -1,4 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { Guitar } from 'interfaces/Guitars.interface';
 import { ToastType } from 'interfaces/ToastType.enum';
 import { Credentials, User, UserRole } from 'interfaces/Users.interface';
 import { authService } from 'services/users.service';
@@ -157,6 +158,29 @@ export const isUserAuth = createAsyncThunk(
   }
 );
 
+export const verifyUser = createAsyncThunk(
+  'auth/verifyUser',
+  async (_, thunkApi) => {
+    try {
+      const user = await authService.verifyUser();
+      const isVerified = user.verified;
+      if (isVerified) {
+        await thunkApi.dispatch(
+          successGlobal({
+            message: `you are verified`,
+            type: ToastType.AUTH_SUCCESS,
+          })
+        );
+      }
+      return isVerified;
+    } catch (err: any) {
+      const error = customError(err.response.data);
+      await thunkApi.dispatch(errorGlobal(error.message));
+      return thunkApi.rejectWithValue(error);
+    }
+  }
+);
+
 export const updateProfile = createAsyncThunk(
   'auth/updateProfile',
   async ({ id, updates }: { id: number; updates: Partial<User> }, thunkApi) => {
@@ -197,6 +221,30 @@ export const updateProfileEmail = createAsyncThunk(
         })
       );
       return user;
+    } catch (err: any) {
+      const error = customError(err.response.data);
+      await thunkApi.dispatch(errorGlobal(error.message));
+      return thunkApi.rejectWithValue(error);
+    }
+  }
+);
+
+export const addToUserCart = createAsyncThunk(
+  'auth/addToUserCart',
+  async ({ id, guitar }: { id: number; guitar: Guitar }, thunkApi) => {
+    try {
+      const rootState = thunkApi.getState() as RootState;
+      const cart = rootState.auth.profile.cart;
+      const updatedCart = [...cart, guitar];
+      await authService.addToCart(id, updatedCart);
+      console.log('reducer>> cart', cart);
+      await thunkApi.dispatch(
+        successGlobal({
+          message: 'item added to cart',
+          type: ToastType.AUTH_SUCCESS,
+        })
+      );
+      return updatedCart;
     } catch (err: any) {
       const error = customError(err.response.data);
       await thunkApi.dispatch(errorGlobal(error.message));
@@ -372,6 +420,30 @@ const authSlice = createSlice({
         }
       })
       .addCase(updateProfileEmail.rejected, (state) => {
+        state.status = 'failed';
+      })
+      .addCase(verifyUser.pending, (state) => {
+        state.status = 'pending';
+      })
+      .addCase(verifyUser.fulfilled, (state, action) => {
+        if (action.payload) {
+          state.profile.verified = action.payload;
+          state.status = 'succeeded';
+        }
+      })
+      .addCase(addToUserCart.rejected, (state) => {
+        state.status = 'failed';
+      })
+      .addCase(addToUserCart.pending, (state) => {
+        state.status = 'pending';
+      })
+      .addCase(addToUserCart.fulfilled, (state, action) => {
+        if (action.payload) {
+          state.profile.cart = action.payload;
+          state.status = 'succeeded';
+        }
+      })
+      .addCase(verifyUser.rejected, (state) => {
         state.status = 'failed';
       });
   },

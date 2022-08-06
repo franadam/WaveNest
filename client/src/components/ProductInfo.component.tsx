@@ -1,5 +1,4 @@
 import React from 'react';
-import Slider from 'react-slick';
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import DoneOutlineIcon from '@mui/icons-material/DoneOutline';
 import SentimentVeryDissatisfiedIcon from '@mui/icons-material/SentimentVeryDissatisfied';
@@ -7,9 +6,15 @@ import { Guitar } from 'interfaces/Guitars.interface';
 import { CustomButton } from './CustomButton.component';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
+import { AddToCart } from './AddToCart.component';
 
 interface Props {
   guitar: Guitar;
+  errorType: string;
+  isModalOpen: boolean;
+  closeModal: () => void;
+  verifyAccount: () => Promise<void>;
+  handleAddToCart: (guitar: Guitar) => false | undefined;
 }
 
 export const ProductInfo: React.FC<Props> = ({
@@ -22,7 +27,17 @@ export const ProductInfo: React.FC<Props> = ({
     price,
     frets,
     wood,
+    id,
+    images,
+    itemSold,
+    created_at,
+    updated_at,
   },
+  errorType,
+  isModalOpen,
+  closeModal,
+  verifyAccount,
+  handleAddToCart,
 }) => {
   const showTags = () => (
     <div className="product_tags">
@@ -63,7 +78,23 @@ export const ProductInfo: React.FC<Props> = ({
       <div className="cart">
         <CustomButton
           type="add_to_cart_link"
-          runAction={() => alert('add_to_cart_link')}
+          runAction={() =>
+            handleAddToCart({
+              brand,
+              model,
+              description,
+              shipping,
+              available,
+              price,
+              frets,
+              wood,
+              id,
+              images,
+              itemSold,
+              created_at,
+              updated_at,
+            })
+          }
         />
       </div>
     </div>
@@ -92,6 +123,13 @@ export const ProductInfo: React.FC<Props> = ({
       {showTags()}
       {showActions()}
       {showSpecs()}
+
+      <AddToCart
+        isModalOpen={isModalOpen}
+        errorType={errorType}
+        closeModal={closeModal}
+        verifyAccount={verifyAccount}
+      />
     </div>
   );
 };
