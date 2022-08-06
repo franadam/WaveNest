@@ -6,9 +6,9 @@ interface Props {
   type: string;
   title?: string;
   subTitle?: string;
-  buttonTitle: string;
+  buttonTitle?: string;
   altClass?: string;
-  linkTo: string;
+  linkTo?: string;
   style?: React.CSSProperties;
   iconSize?: string;
   runAction?: () => void;
@@ -26,16 +26,19 @@ export const CustomButton: React.FC<Props> = ({
   let template: React.ReactElement;
   switch (type) {
     case 'default':
-      template = (
-        <Link
-          className={!altClass ? 'link_default' : altClass}
-          to={linkTo}
-          style={{ ...style }}
-        >
-          {buttonTitle}
-        </Link>
-      );
-
+      if (linkTo && buttonTitle)
+        template = (
+          <Link
+            className={!altClass ? 'link_default' : altClass}
+            to={linkTo}
+            style={{ ...style }}
+          >
+            {buttonTitle}
+          </Link>
+        );
+      else {
+        template = <div></div>;
+      }
       break;
 
     case 'bag_link':
@@ -48,6 +51,19 @@ export const CustomButton: React.FC<Props> = ({
           style={{ ...style }}
         >
           <AddShoppingCartIcon style={{ fontSize: iconSize }} />
+        </div>
+      );
+      break;
+
+    case 'add_to_cart_link':
+      template = (
+        <div
+          className="add_to_cart_link"
+          onClick={() => {
+            runAction && runAction();
+          }}
+        >
+          <AddShoppingCartIcon style={{ fontSize: iconSize }} /> Add to cart
         </div>
       );
       break;

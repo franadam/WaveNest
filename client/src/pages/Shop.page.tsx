@@ -10,12 +10,10 @@ import { CardBlock } from 'components/Home';
 import { CustomPagination } from 'components/Pagination.component';
 import { SearchBar } from 'components/SearchBar.component';
 import paginationHelper from 'utils/pagination';
-import { CollapseCheckBox } from 'components/Shop/CollapseCheckBox.component';
-import { RangeSelect } from 'components/Shop/RangeSelect.component';
 import guitarService from 'services/guitars.service';
 import { Shopping } from 'interfaces/Filter.interface';
-import { CustomSitch } from 'components/Shop/Switch.component';
 import { Loader } from 'components/Loader.component';
+import { CollapseCheckBox, CustomSitch, RangeSelect } from 'components/Shop';
 
 const initFilter = {
   frets: [20, 21, 22, 24],

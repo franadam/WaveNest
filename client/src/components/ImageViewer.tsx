@@ -12,19 +12,6 @@ export const ImageViewer: React.FC<Props> = ({ images, deleteImage }) => {
   const [idToRemove, setIdToRemove] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const getPreview = () => {
-    return images.length && images[0].id
-      ? images.map(({ id, url }) => (
-          <div
-            key={id}
-            className="pic_block"
-            onClick={() => openModal(id)}
-            style={{ background: `url(${url})` }}
-          ></div>
-        ))
-      : null;
-  };
-
   console.log('props>> images', images);
 
   const openModal = (id: string) => {

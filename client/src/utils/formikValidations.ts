@@ -65,7 +65,7 @@ export const productFormValidations = () =>
     brand: Yup.string().required('Sorry, the brand is required'),
     description: Yup.string()
       .min(5, '5 char min')
-      .max(230, '30 char max')
+      .max(2000, '2000 char max')
       .required('Sorry, the description is required'),
     price: Yup.number()
       .min(1, '1 char min')
