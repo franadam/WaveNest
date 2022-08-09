@@ -5,7 +5,7 @@ import * as csurf from 'csurf';
 import { ValidationPipe } from '@nestjs/common';
 const xss = require('xss-clean');
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 4000;
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);

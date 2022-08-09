@@ -253,6 +253,30 @@ export const addToUserCart = createAsyncThunk(
   }
 );
 
+export const removeFromUserCart = createAsyncThunk(
+  'auth/removeFromUserCart',
+  async (id: number, thunkApi) => {
+    try {
+      const rootState = thunkApi.getState() as RootState;
+      const { email, cart, ...rest } = rootState.auth.profile;
+      const updatedCart = cart.filter((guitar) => guitar.id !== id);
+      console.log('reducer >> updatedCart', cart, id, updatedCart);
+      await authService.update(id, { ...rest, cart: updatedCart });
+      await thunkApi.dispatch(
+        successGlobal({
+          message: 'item remove from cart',
+          type: ToastType.AUTH_SUCCESS,
+        })
+      );
+      return updatedCart;
+    } catch (err: any) {
+      const error = customError(err.response.data);
+      await thunkApi.dispatch(errorGlobal(error.message));
+      return thunkApi.rejectWithValue(error);
+    }
+  }
+);
+
 const authSlice = createSlice({
   name: 'auth',
   initialState,
@@ -431,6 +455,9 @@ const authSlice = createSlice({
           state.status = 'succeeded';
         }
       })
+      .addCase(verifyUser.rejected, (state) => {
+        state.status = 'failed';
+      })
       .addCase(addToUserCart.rejected, (state) => {
         state.status = 'failed';
       })
@@ -443,8 +470,17 @@ const authSlice = createSlice({
           state.status = 'succeeded';
         }
       })
-      .addCase(verifyUser.rejected, (state) => {
+      .addCase(removeFromUserCart.rejected, (state) => {
         state.status = 'failed';
+      })
+      .addCase(removeFromUserCart.pending, (state) => {
+        state.status = 'pending';
+      })
+      .addCase(removeFromUserCart.fulfilled, (state, action) => {
+        if (action.payload) {
+          state.profile.cart = action.payload;
+          state.status = 'succeeded';
+        }
       });
   },
 });

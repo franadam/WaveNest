@@ -2,10 +2,10 @@ import React, { useEffect, useState } from 'react';
 import Moment from 'react-moment';
 import { Table, Modal, Button, Pagination } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
-import { Loader } from './Loader.component';
+import { Loader } from '../Loader.component';
 import { Guitar } from 'interfaces/Guitars.interface';
 import { Column, Order, Page, Sort } from 'interfaces/Filter.interface';
-import { CustomPagination } from './Pagination.component';
+import { CustomPagination } from '../Pagination.component';
 
 interface Props {
   products: Guitar[];

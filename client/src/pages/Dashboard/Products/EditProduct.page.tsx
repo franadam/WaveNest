@@ -26,7 +26,7 @@ import { getBrands, selectAllBrands } from 'store/reducers/brands.reducer';
 import { getGuitars, updateGuitar } from 'store/reducers/guitars.reducer';
 import { PicUpload } from 'components/Upload.component';
 import { Picture } from 'interfaces/Pictures.interface';
-import { ImageViewer } from 'components/ImageViewer';
+import { ImageViewer } from 'components/Dasboard/ImageViewer';
 import { Guitar } from 'interfaces/Guitars.interface';
 import guitarService from 'services/guitars.service';
 

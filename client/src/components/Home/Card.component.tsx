@@ -26,6 +26,7 @@ export const Card: React.FC<Props> = ({ grid, item }) => {
     dispatch(verifyUser());
   };
 
+  console.log('item', item);
   const handleAddToCart = (guitar: Guitar) => {
     if (!isAuth) {
       setisModalOpen(true);

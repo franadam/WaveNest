@@ -6,7 +6,7 @@ import { useAppDispatch } from 'hooks/use-type-selector.hook';
 import { isUserAuth } from 'store/reducers/auth.reducer';
 import { Dashboard } from 'pages/Dashboard/Dashboard.page';
 import { AuthGard } from 'hoc/Auth.gard';
-import { UserInfo } from 'pages/Dashboard/UserInfo.page';
+import { UserInfo } from 'pages/Dashboard/User/UserInfo.page';
 import { AdminProducts } from 'pages/Dashboard/Products/AdminProducts.page';
 import { Home } from 'pages/Home.page';
 import { Register } from 'pages/Register.page';
@@ -16,6 +16,7 @@ import { EditProduct } from 'pages/Dashboard/Products/EditProduct.page';
 import { Shop } from 'pages/Shop.page';
 import { Product } from 'pages/Product.page';
 import { Verification } from 'pages/Verification.page';
+import { UserCart } from 'pages/Dashboard/User/UserCart.page';
 
 export const App: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -47,6 +48,10 @@ export const App: React.FC = () => {
         <Route
           path="/dashboard/user_profile"
           element={<AuthGard ComposedComponent={UserInfo} />}
+        />
+        <Route
+          path="/dashboard/user_cart"
+          element={<AuthGard ComposedComponent={UserCart} />}
         />
         <Route
           path="/dashboard"

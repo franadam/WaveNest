@@ -4,7 +4,7 @@ import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import { DashboardHoc } from 'hoc/Dashboard.hoc';
 import { useAppDispatch, useAppSelector } from 'hooks/use-type-selector.hook';
-import { ProductsTable } from 'components/ProductsTable.component';
+import { ProductsTable } from 'components/Dasboard/ProductsTable.component';
 import { ToastType } from 'interfaces/ToastType.enum';
 import { clearNotifications } from 'store/reducers/notifications.reducer';
 import { Guitar } from 'interfaces/Guitars.interface';

@@ -21,7 +21,7 @@ import { getBrands, selectAllBrands } from 'store/reducers/brands.reducer';
 import { addGuitar } from 'store/reducers/guitars.reducer';
 import { PicUpload } from 'components/Upload.component';
 import { Picture } from 'interfaces/Pictures.interface';
-import { ImageViewer } from 'components/ImageViewer';
+import { ImageViewer } from 'components/Dasboard/ImageViewer';
 
 export const AddProduct: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);

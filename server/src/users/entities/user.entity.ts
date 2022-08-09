@@ -36,7 +36,7 @@ export class User {
   roles: UserRole;
 
   @Column('jsonb', { default: [] })
-  cart: Guitar[];
+  cart: { amount: number; guitar: Guitar }[];
 
   @Column('varchar', { array: true, default: [] })
   history: string[];

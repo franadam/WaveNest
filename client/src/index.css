@@ -950,6 +950,10 @@ footer .business_nfo .nfo {
   margin-top: 50px;
 }
 
+.user_product_block:hover {
+  cursor: pointer;
+}
+
 /*=============================
          ADMIN
 ===============================*/

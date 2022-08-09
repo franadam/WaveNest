@@ -2,8 +2,8 @@ import axios from 'axios';
 import { Guitar } from 'interfaces/Guitars.interface';
 import { User, Credentials } from 'interfaces/Users.interface';
 
-const baseUrl = 'http://localhost:5000/api/users';
-const authUrl = 'http://localhost:5000/api/auth';
+const baseUrl = 'http://localhost:4000/api/users';
+const authUrl = 'http://localhost:4000/api/auth';
 
 const register = async (user: User): Promise<User> => {
   const response = await axios.post(`${authUrl}/register`, user);
@@ -12,6 +12,7 @@ const register = async (user: User): Promise<User> => {
 };
 
 const login = async (credentials: Credentials): Promise<User> => {
+  console.log('first');
   axios.defaults.withCredentials = true;
   const response = await axios.post(`${authUrl}/login`, credentials, {
     withCredentials: true,
