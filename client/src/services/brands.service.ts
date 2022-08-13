@@ -2,7 +2,7 @@ import axios from 'axios';
 import { Brand } from 'interfaces/Brands.interface';
 import { authService } from './users.service';
 
-const baseUrl = 'http://localhost:4000/api/guitars/brands';
+const baseUrl = 'https://localhost:4000/api/guitars/brands';
 
 const createBrand = async (g: Brand): Promise<Brand> => {
   const response = await axios.post(`${baseUrl}`, g);

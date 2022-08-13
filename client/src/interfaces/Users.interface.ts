@@ -5,6 +5,14 @@ export enum UserRole {
   USER = 'USER',
 }
 
+export interface History {
+  id: number;
+  created_at: string;
+  order_id: string;
+  amount: number;
+  items: Guitar[];
+}
+
 export interface User {
   id: number;
   firstname: string;
@@ -14,7 +22,7 @@ export interface User {
   password: string;
   roles: UserRole;
   cart: Guitar[];
-  history: string[];
+  history: History[];
   verified: boolean;
   token: string;
 }

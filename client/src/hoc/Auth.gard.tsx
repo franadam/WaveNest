@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Loader } from 'components/Loader.component';
 import { useAppSelector } from 'hooks/use-type-selector.hook';
 import { ToastType } from 'interfaces/ToastType.enum';
+import { authService } from 'services/users.service';
 
 interface Props {
   ComposedComponent: React.FC;
@@ -10,23 +11,26 @@ interface Props {
 
 export const AuthGard: React.FC<Props> = ({ ComposedComponent }) => {
   const AuthenticationCheck: React.FC = () => {
-    const [isAuth, setIsAuth] = useState(false);
+    const [isUserAuth, setIsUserAuth] = useState(false);
 
     const notifications = useAppSelector(({ notifications }) => notifications);
-    const userIsAuth = useAppSelector(({ auth }) => auth.isAuth);
+    const authReducer = useAppSelector(({ auth }) => auth);
+    const {
+      isAuth,
+      profile: { token },
+    } = authReducer;
     const navigate = useNavigate();
 
     useEffect(() => {
       if (
-        !userIsAuth &&
-        notifications &&
-        notifications.type === ToastType.ERROR
+        (isAuth && token !== authService.getToken()) ||
+        (notifications && notifications.type === ToastType.ERROR)
       ) {
         navigate('/auth/login');
       } else {
-        setIsAuth(true);
+        setIsUserAuth(true);
       }
-    }, [navigate, userIsAuth, notifications]);
+    }, [navigate, isAuth, notifications]);
 
     return !isAuth ? <Loader full={true} /> : <ComposedComponent />;
   };

@@ -5,6 +5,8 @@ import { CustomButton } from '../CustomButton.component';
 import { useAppDispatch, useAppSelector } from 'hooks/use-type-selector.hook';
 import { AddToCart } from 'components/AddToCart.component';
 import { addToUserCart, verifyUser } from 'store/reducers/auth.reducer';
+import { ToastType } from 'interfaces/ToastType.enum';
+import { clearNotifications } from 'store/reducers/notifications.reducer';
 
 interface Props {
   grid: boolean;
@@ -16,6 +18,7 @@ export const Card: React.FC<Props> = ({ grid, item }) => {
   const [errorType, setErrorType] = useState('');
 
   const { isAuth, profile: user } = useAppSelector((state) => state.auth);
+  const notifications = useAppSelector(({ notifications }) => notifications);
 
   const dispatch = useAppDispatch();
 
@@ -26,7 +29,12 @@ export const Card: React.FC<Props> = ({ grid, item }) => {
     dispatch(verifyUser());
   };
 
-  console.log('item', item);
+  useEffect(() => {
+    if (notifications && notifications.type === ToastType.CART_SUCCESS) {
+      dispatch(clearNotifications());
+    }
+  }, [dispatch, notifications]);
+
   const handleAddToCart = (guitar: Guitar) => {
     if (!isAuth) {
       setisModalOpen(true);
@@ -38,7 +46,6 @@ export const Card: React.FC<Props> = ({ grid, item }) => {
       setErrorType('verify');
       return false;
     }
-    console.log('user ', user);
     dispatch(addToUserCart({ id: user.id, guitar }));
   };
 

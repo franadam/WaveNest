@@ -2,8 +2,9 @@ import axios from 'axios';
 import { Guitar } from 'interfaces/Guitars.interface';
 import { User, Credentials } from 'interfaces/Users.interface';
 
-const baseUrl = 'http://localhost:4000/api/users';
-const authUrl = 'http://localhost:4000/api/auth';
+const baseUrl = 'https://localhost:4000/api/users';
+const authUrl = 'https://localhost:4000/api/auth';
+const transactionsUrl = 'https://localhost:4000/api/transactions';
 
 const register = async (user: User): Promise<User> => {
   const response = await axios.post(`${authUrl}/register`, user);
@@ -119,6 +120,36 @@ const addToCart = async (id: number, cart: Guitar[]): Promise<User> => {
   return response.data;
 };
 
+const purchase = async (order_id: string) => {
+  const response = await axios.post(
+    `${transactionsUrl}`,
+    { order_id },
+    {
+      headers: { Authorization: `Bearer ${getToken()}` },
+    }
+  );
+  const transaction = response.data;
+  const newHistory = [
+    {
+      id: transaction.id,
+      created_at: transaction.order_data.create_time,
+      order_id: transaction.order_data.id,
+      amount: parseFloat(transaction.order_data.purchase_units[0].amount.value),
+      items: transaction.user.cart,
+    },
+  ];
+  const { email, id, history, ...rest } = await profile();
+  const user = await axios.patch(
+    `${baseUrl}/${id}`,
+    { ...rest, history: [...history, ...newHistory], cart: [] },
+    {
+      headers: { Authorization: `Bearer ${getToken()}` },
+    }
+  );
+  console.log('service user', user);
+  return history;
+};
+
 const authService = {
   login,
   register,
@@ -131,6 +162,7 @@ const authService = {
   updateEmail,
   verifyUser,
   addToCart,
+  purchase,
 };
 
 const usersService = { fetchUsers };

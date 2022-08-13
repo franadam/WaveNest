@@ -7,12 +7,14 @@ import { AppService } from './app.service';
 import { User } from '../users/entities/user.entity';
 import { AuthModule } from '../auth/auth.module';
 import { UsersModule } from '../users/users.module';
-import { BrandsModule } from 'src/brands/brands.module';
-import { Brand } from 'src/brands/entities/brand.entity';
-import { Guitar } from 'src/guitars/entities/guitar.entity';
-import { GuitarsModule } from 'src/guitars/guitars.module';
-import { SitesModule } from 'src/sites/sites.module';
-import { Site } from 'src/sites/entities/site.entity';
+import { BrandsModule } from '../brands/brands.module';
+import { Brand } from '../brands/entities/brand.entity';
+import { Guitar } from '../guitars/entities/guitar.entity';
+import { GuitarsModule } from '../guitars/guitars.module';
+import { SitesModule } from '../sites/sites.module';
+import { Site } from '../sites/entities/site.entity';
+import { TransactionsModule } from '../transactions/transactions.module';
+import { Transaction } from '../transactions/entities/transaction.entity';
 
 @Module({
   imports: [
@@ -29,7 +31,7 @@ import { Site } from 'src/sites/entities/site.entity';
         username: config.get<string>('DATABASE_USERNAME'),
         password: config.get<string>('DATABASE_PASSWORD'),
         database: config.get<string>('DATABASE_NAME'),
-        entities: [User, Brand, Guitar, Site],
+        entities: [User, Guitar, Brand, Site, Transaction],
         synchronize: true,
       }),
     }),
@@ -38,6 +40,7 @@ import { Site } from 'src/sites/entities/site.entity';
     BrandsModule,
     GuitarsModule,
     SitesModule,
+    TransactionsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

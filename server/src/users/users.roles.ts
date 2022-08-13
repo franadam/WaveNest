@@ -13,6 +13,8 @@ roles
   .updateOwn('profile')
   .readAny('brands')
   .readAny('guitars')
+  .readAny('transactions')
+  .createAny('transactions')
   .grant(UserRole.ADMIN) // switch to another role without breaking the chain
   .extend(UserRole.USER)
   .createAny('profile') // inherit role capabilities. also takes an array
@@ -24,6 +26,7 @@ roles
   .createAny('guitars')
   .updateAny('guitars')
   .deleteAny('guitars')
+  .deleteAny('transactions')
   .readAny('sites')
   .createAny('sites')
   .updateAny('sites')

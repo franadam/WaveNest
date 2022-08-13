@@ -1,11 +1,21 @@
-import { Guitar } from 'src/guitars/entities/guitar.entity';
 import {
   Column,
   CreateDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { Guitar } from '../../guitars/entities/guitar.entity';
+import { Transaction } from '../../transactions/entities/transaction.entity';
+
+interface History {
+  id: number;
+  created_at: string;
+  order_id: string;
+  amount: number;
+  items: Guitar[];
+}
 
 export enum UserRole {
   ADMIN = 'ADMIN',
@@ -36,10 +46,13 @@ export class User {
   roles: UserRole;
 
   @Column('jsonb', { default: [] })
-  cart: { amount: number; guitar: Guitar }[];
+  cart: Guitar[];
 
-  @Column('varchar', { array: true, default: [] })
-  history: string[];
+  @Column('jsonb', { default: [] })
+  history: History[];
+
+  @OneToMany(() => Transaction, (transaction) => transaction.user)
+  transactions: Transaction[];
 
   @Column('boolean', { default: false })
   verified: boolean;

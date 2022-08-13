@@ -6,12 +6,21 @@ import reportWebVitals from './reportWebVitals';
 import { App } from './App/App';
 import { store } from './store/store';
 import './index.css';
+import { PayPalScriptProvider } from '@paypal/react-paypal-js';
+
+const initialOptions = {
+  'client-id':
+    'ASFWp9d9fDDQpBFGI52PPJ4dGTSOJIaYO-6gX0nmEf83mahp2yltw9ozxnaavtkzXZk9aKk5ut9cf9T5',
+  currency: 'EUR',
+};
 
 const app = (
   <React.StrictMode>
     <BrowserRouter>
       <Provider store={store}>
-        <App />
+        <PayPalScriptProvider options={initialOptions}>
+          <App />
+        </PayPalScriptProvider>
       </Provider>
     </BrowserRouter>
   </React.StrictMode>

@@ -241,7 +241,7 @@ export const addToUserCart = createAsyncThunk(
       await thunkApi.dispatch(
         successGlobal({
           message: 'item added to cart',
-          type: ToastType.AUTH_SUCCESS,
+          type: ToastType.CART_SUCCESS,
         })
       );
       return updatedCart;
@@ -265,10 +265,32 @@ export const removeFromUserCart = createAsyncThunk(
       await thunkApi.dispatch(
         successGlobal({
           message: 'item remove from cart',
-          type: ToastType.AUTH_SUCCESS,
+          type: ToastType.CART_SUCCESS,
         })
       );
       return updatedCart;
+    } catch (err: any) {
+      const error = customError(err.response.data);
+      await thunkApi.dispatch(errorGlobal(error.message));
+      return thunkApi.rejectWithValue(error);
+    }
+  }
+);
+
+export const purchaseCart = createAsyncThunk(
+  'auth/purchaseCart',
+  async (order_id: string, thunkApi) => {
+    try {
+      const history = await authService.purchase(order_id);
+      console.log('reducer>> cart', history);
+      await thunkApi.dispatch(
+        successGlobal({
+          message: 'Thank you for your purchase',
+          type: ToastType.CART_SUCCESS,
+        })
+      );
+      console.log('reducer >>> history', history);
+      return history;
     } catch (err: any) {
       const error = customError(err.response.data);
       await thunkApi.dispatch(errorGlobal(error.message));
@@ -479,6 +501,19 @@ const authSlice = createSlice({
       .addCase(removeFromUserCart.fulfilled, (state, action) => {
         if (action.payload) {
           state.profile.cart = action.payload;
+          state.status = 'succeeded';
+        }
+      })
+      .addCase(purchaseCart.rejected, (state) => {
+        state.status = 'failed';
+      })
+      .addCase(purchaseCart.pending, (state) => {
+        state.status = 'pending';
+      })
+      .addCase(purchaseCart.fulfilled, (state, action) => {
+        if (action.payload) {
+          state.profile.history = action.payload;
+          state.profile.cart = [];
           state.status = 'succeeded';
         }
       });

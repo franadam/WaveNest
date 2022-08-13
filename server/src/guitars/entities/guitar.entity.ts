@@ -1,16 +1,14 @@
-import { Brand } from 'src/brands/entities/brand.entity';
-import { Picture } from 'src/interfaces/Pictures.interface';
 import {
   Column,
   CreateDateColumn,
   Entity,
   JoinColumn,
   ManyToOne,
-  OneToMany,
-  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { Brand } from 'src/brands/entities/brand.entity';
+import { Picture } from 'src/interfaces/Pictures.interface';
 
 @Entity()
 export class Guitar {

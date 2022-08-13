@@ -7,7 +7,9 @@ import { clearNotifications } from 'store/reducers/notifications.reducer';
 export const Header: React.FC = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const isAuth = useAppSelector(({ auth }) => auth.isAuth);
+  const authReducer = useAppSelector(({ auth }) => auth);
+  const isAuth = authReducer.isAuth;
+  const cart = authReducer.profile.cart.length;
 
   const logout = async () => {
     await dispatch(logoutUser());
@@ -29,7 +31,7 @@ export const Header: React.FC = () => {
           <div className="top">
             <>
               <div className="cart_link">
-                <span>0</span>
+                <span>{cart}</span>
                 <Link to={'/dashboard/user_cart'}> My Cart</Link>
               </div>
               <Link to={'/dashboard/'}> My Account</Link>

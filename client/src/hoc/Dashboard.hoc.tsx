@@ -23,7 +23,6 @@ const admin: CustomLinks[] = [
   { name: 'Manage Site', linkTo: '/dashboard/admin/manage_site' },
   { name: 'Manage Products', linkTo: '/dashboard/admin/manage_products' },
   { name: 'Add Products', linkTo: '/dashboard/admin/add_product' },
-  { name: 'Manage categories', linkTo: '/dashboard/admin/manage_categories' },
 ];
 
 export const DashboardHoc: React.FC<Props> = ({ children, title }) => {

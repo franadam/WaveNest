@@ -11,15 +11,17 @@ interface Props {
 export const CartDetails: React.FC<Props> = ({ product, removeItem }) => {
   const navigate = useNavigate();
 
-  const goToProduct = () => {
-    navigate(`/guitar_detail/${product.id}`, { replace: true });
+  const goToProduct = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    const target = e.target as HTMLDivElement;
+    if (target.className !== 'cart_remove_btn')
+      navigate(`/guitar_detail/${product.id}`, { replace: true });
   };
 
   return (
     <div
       className="user_product_block"
       key={product.id}
-      onClick={() => goToProduct()}
+      onClick={(e) => goToProduct(e)}
     >
       <div className="item">
         <div

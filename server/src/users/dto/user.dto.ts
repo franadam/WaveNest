@@ -1,4 +1,6 @@
 import { Exclude, Expose } from 'class-transformer';
+import { Guitar } from 'src/guitars/entities/guitar.entity';
+import { Transaction } from 'src/transactions/entities/transaction.entity';
 import { UserRole } from '../users.roles';
 
 export class UserDto {
@@ -21,10 +23,13 @@ export class UserDto {
   roles: UserRole;
 
   @Expose()
-  cart: string[];
+  cart: Guitar[];
 
   @Expose()
   history: string[];
+
+  @Expose()
+  transactions: Transaction[];
 
   @Expose()
   verified: boolean;

@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { DashboardHoc } from 'hoc/Dashboard.hoc';
 import { useAppSelector } from 'hooks/use-type-selector.hook';
+import { HistoryTable } from 'components/Dasboard/HistoryTable.component';
 
 export const Dashboard: React.FC = () => {
   const profile = useAppSelector(({ auth }) => auth.profile);
@@ -10,16 +11,25 @@ export const Dashboard: React.FC = () => {
       <div className="user_nfo_panel">
         <h1>User Information</h1>
         <div>
-          <span>Firstname: {profile.firstname}</span>
-          <span>Lastname: {profile.lastname}</span>
-          <span>Email: {profile.email}</span>
+          <span>
+            Firstname: <strong>{profile.firstname}</strong>
+          </span>
+          <span>
+            Lastname: <strong>{profile.lastname}</strong>
+          </span>
+          <span>
+            Email: <strong>{profile.email}</strong>
+          </span>
         </div>
-        {/* <Button type="default" title="Edit profile" linkTo="/user/profile" /> */}
       </div>
-      <div className="user_nfo_panel">
-        <h1>History purchases</h1>
-        <div className="user_product_block_wrapper">history</div>
-      </div>
+      {profile.history.length && (
+        <div className="user_nfo_panel">
+          <h1>History purchases</h1>
+          <div className="user_product_block_wrapper">
+            <HistoryTable history={profile.history} />
+          </div>
+        </div>
+      )}
     </DashboardHoc>
   );
 };

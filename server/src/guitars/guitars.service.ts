@@ -16,7 +16,6 @@ import { Guitar } from './entities/guitar.entity';
 export class GuitarsService {
   constructor(
     @InjectRepository(Guitar) private readonly guitarRepo: Repository<Guitar>,
-    @InjectRepository(Brand) private brandRepo: Repository<Brand>,
   ) {}
 
   create(createGuitarDto: CreateGuitarDto) {

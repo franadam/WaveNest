@@ -6,10 +6,11 @@ import { useAppDispatch, useAppSelector } from 'hooks/use-type-selector.hook';
 import { Guitar } from 'interfaces/Guitars.interface';
 import { useParams } from 'react-router-dom';
 import guitarService from 'services/guitars.service';
-import { selectGuitarById } from 'store/reducers/guitars.reducer';
 import { renderCardImage } from 'utils/renderCardImage';
 import Slider from 'react-slick';
 import { addToUserCart, verifyUser } from 'store/reducers/auth.reducer';
+import { ToastType } from 'interfaces/ToastType.enum';
+import { clearNotifications } from 'store/reducers/notifications.reducer';
 
 export const Product: React.FC = () => {
   const [_, setIsLoading] = useState(false);
@@ -19,9 +20,9 @@ export const Product: React.FC = () => {
 
   const { id } = useParams();
   const { isAuth, profile: user } = useAppSelector((state) => state.auth);
+  const notifications = useAppSelector(({ notifications }) => notifications);
   const dispatch = useAppDispatch();
 
-  // const guitar = useAppSelector(state => selectGuitarById(state,id))
   const settings = {
     dots: true,
     infinite: true,
@@ -45,6 +46,12 @@ export const Product: React.FC = () => {
       fetchGuitar(id);
     }
   }, [id]);
+
+  useEffect(() => {
+    if (notifications && notifications.type === ToastType.CART_SUCCESS) {
+      dispatch(clearNotifications());
+    }
+  }, [dispatch, notifications]);
 
   const verifyAccount = async () => {
     console.log('verifyAccount');

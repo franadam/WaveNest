@@ -4,7 +4,7 @@ import { Guitar } from 'interfaces/Guitars.interface';
 import { Picture } from 'interfaces/Pictures.interface';
 import { authService } from './users.service';
 
-const baseUrl = 'http://localhost:4000/api/guitars';
+const baseUrl = 'https://localhost:4000/api/guitars';
 
 const createGuitar = async (g: any): Promise<Guitar> => {
   const response = await axios.post(`${baseUrl}`, g, {
