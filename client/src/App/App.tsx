@@ -17,6 +17,7 @@ import { Shop } from 'pages/Shop.page';
 import { Product } from 'pages/Product.page';
 import { Verification } from 'pages/Verification.page';
 import { UserCart } from 'pages/Dashboard/User/UserCart.page';
+import { ManageSite } from 'pages/Dashboard/Products/ManageSite.page';
 
 export const App: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -53,6 +54,11 @@ export const App: React.FC = () => {
           path="/dashboard/user_cart"
           element={<AuthGard ComposedComponent={UserCart} />}
         />
+        <Route
+          path="/dashboard/admin/manage_site"
+          element={<AuthGard ComposedComponent={ManageSite} />}
+        />
+
         <Route
           path="/dashboard"
           element={<AuthGard ComposedComponent={Dashboard} />}

@@ -39,13 +39,6 @@ export class TransactionsService {
       order_id: orderID,
       order_data,
     });
-    console.log(
-      'Object(transaction.order_data[0].purchase_units[0]',
-      // transaction.order_data,
-      transaction.order_data.purchase_units,
-      Object.keys(transaction.order_data.purchase_units),
-      // Object.keys(transaction.order_data[0].purchase_units[0]),
-    );
     return this.transactionRepo.save(transaction);
   }
 

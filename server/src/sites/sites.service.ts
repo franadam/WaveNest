@@ -29,7 +29,7 @@ export class SitesService {
   }
 
   async update(id: number, updateSiteDto: UpdateSiteDto) {
-    const site = await this.findOne(id);
+    const site = await this.sitesRepo.findOneBy({ id });
     return this.sitesRepo.save({ ...site, ...updateSiteDto });
   }
 

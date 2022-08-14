@@ -3,6 +3,7 @@ import authReducer from './reducers/auth.reducer';
 import brandsReducer from './reducers/brands.reducer';
 import guitarsReducer from './reducers/guitars.reducer';
 import notificationsReducer from './reducers/notifications.reducer';
+import sitesReducer from './reducers/sites.reducer';
 import usersReducer from './reducers/users.reducer';
 
 export const store = configureStore({
@@ -11,6 +12,7 @@ export const store = configureStore({
     users: usersReducer,
     guitars: guitarsReducer,
     brands: brandsReducer,
+    sites: sitesReducer,
     notifications: notificationsReducer,
   },
 });

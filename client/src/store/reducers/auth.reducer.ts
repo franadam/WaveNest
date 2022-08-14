@@ -7,6 +7,7 @@ import { RootState } from 'store/store';
 import { customError } from 'utils/customError';
 import { updateFieldHelper } from 'utils/updateHelper';
 import { errorGlobal, successGlobal } from './notifications.reducer';
+import { getSites } from './sites.reducer';
 
 interface State {
   status: 'idle' | 'pending' | 'succeeded' | 'failed';
@@ -148,6 +149,7 @@ export const isUserAuth = createAsyncThunk(
           successGlobal({ message: `Welcome`, type: ToastType.AUTH_SUCCESS })
         );
         await thunkApi.dispatch(getProfile());
+        await thunkApi.dispatch(getSites());
       }
       return isLogged;
     } catch (err: any) {
