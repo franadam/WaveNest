@@ -1,6 +1,7 @@
 import { MiddlewareConsumer, Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { ServeStaticModule } from '@nestjs/serve-static';
 const cookieSession = require('cookie-session');
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -15,6 +16,7 @@ import { SitesModule } from '../sites/sites.module';
 import { Site } from '../sites/entities/site.entity';
 import { TransactionsModule } from '../transactions/transactions.module';
 import { Transaction } from '../transactions/entities/transaction.entity';
+import { join } from 'path';
 
 @Module({
   imports: [
@@ -34,6 +36,9 @@ import { Transaction } from '../transactions/entities/transaction.entity';
         entities: [User, Guitar, Brand, Site, Transaction],
         synchronize: true,
       }),
+    }),
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '../../../', 'client', 'build', 'index.html'),
     }),
     UsersModule,
     AuthModule,
