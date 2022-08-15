@@ -37,9 +37,6 @@ import { join } from 'path';
         synchronize: true,
       }),
     }),
-    ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '../../../', 'client', 'build', 'index.html'),
-    }),
     UsersModule,
     AuthModule,
     BrandsModule,
