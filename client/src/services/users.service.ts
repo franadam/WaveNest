@@ -32,6 +32,7 @@ const googleLogin = async (): Promise<User> => {
 
 const logout = async (): Promise<User> => {
   const response = await axios(`${authUrl}/logout`, {
+    withCredentials: true,
     headers: { Authorization: `Bearer ${getToken()}` },
   });
   console.log('service >> response.data', response.data);
@@ -41,6 +42,7 @@ const logout = async (): Promise<User> => {
 
 const profile = async (): Promise<User> => {
   const response = await axios(`${authUrl}/profile`, {
+    withCredentials: true,
     headers: { Authorization: `Bearer ${getToken()}` },
   });
   return response.data;
@@ -78,6 +80,7 @@ const fetchUsers = async (): Promise<User[]> => {
 
 const update = async (id: number, updates: Partial<User>) => {
   const response = await axios.patch(`${baseUrl}/${id}`, updates, {
+    withCredentials: true,
     headers: { Authorization: `Bearer ${getToken()}` },
   });
   return response.data;
@@ -85,6 +88,7 @@ const update = async (id: number, updates: Partial<User>) => {
 
 const updateEmail = async (id: number, email: string) => {
   const response = await axios.patch(`${baseUrl}/${id}/email`, email, {
+    withCredentials: true,
     headers: { Authorization: `Bearer ${getToken()}` },
   });
   console.log('service user', response.data);
@@ -98,6 +102,7 @@ const verifyUser = async (): Promise<User> => {
   console.log('params', params);
   const response = await axios(`${baseUrl}/verify`, {
     params,
+    withCredentials: true,
     headers: { Authorization: `Bearer ${getToken()}` },
   });
   console.log('service user', response.data);
@@ -112,6 +117,7 @@ const addToCart = async (id: number, cart: Guitar[]): Promise<User> => {
     `${baseUrl}/${id}`,
     { ...rest, cart },
     {
+      withCredentials: true,
       headers: { Authorization: `Bearer ${getToken()}` },
     }
   );
@@ -125,6 +131,7 @@ const purchase = async (order_id: string) => {
     `${transactionsUrl}`,
     { order_id },
     {
+      withCredentials: true,
       headers: { Authorization: `Bearer ${getToken()}` },
     }
   );
@@ -143,6 +150,7 @@ const purchase = async (order_id: string) => {
     `${baseUrl}/${id}`,
     { ...rest, history: [...history, ...newHistory], cart: [] },
     {
+      withCredentials: true,
       headers: { Authorization: `Bearer ${getToken()}` },
     }
   );

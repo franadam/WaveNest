@@ -8,6 +8,7 @@ const baseUrl = `https://localhost:4000/api/guitars`;
 
 const createGuitar = async (g: any): Promise<Guitar> => {
   const response = await axios.post(`${baseUrl}`, g, {
+    withCredentials: true,
     headers: { Authorization: `Bearer ${authService.getToken()}` },
   });
   const guitar = response.data;
@@ -39,6 +40,7 @@ const updateGuitar = async (
   updates: Partial<Guitar>
 ): Promise<Guitar> => {
   const response = await axios.patch(`${baseUrl}/${id}`, updates, {
+    withCredentials: true,
     headers: { Authorization: `Bearer ${authService.getToken()}` },
   });
   const guitar = response.data;
@@ -47,6 +49,7 @@ const updateGuitar = async (
 
 const deleteGuitar = async (id: number): Promise<Guitar> => {
   const response = await axios.delete(`${baseUrl}/${id}`, {
+    withCredentials: true,
     headers: { Authorization: `Bearer ${authService.getToken()}` },
   });
   const guitar = response.data;
@@ -57,6 +60,7 @@ const deleteGuitar = async (id: number): Promise<Guitar> => {
 const shopping = async (filter: Shopping): Promise<Guitar[]> => {
   console.log('filter', filter);
   const response = await axios.post(`${baseUrl}/shop`, filter, {
+    withCredentials: true,
     headers: { Authorization: `Bearer ${authService.getToken()}` },
   });
   const guitars = response.data;

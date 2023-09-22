@@ -52,7 +52,10 @@ export class UsersService {
     return this.userRepo.findOne({ where: [{ email }, { username: email }] });
   }
 
-  async update(id: number, updateUserDto: Partial<UpdateUserDto>) {
+  async update(
+    id: number,
+    updateUserDto: Partial<UpdateUserDto>,
+  ): Promise<User> {
     const user = await this.findOneById(id);
     let updateted = { ...user, ...updateUserDto };
     if (updateUserDto.password) {
@@ -66,7 +69,7 @@ export class UsersService {
     return this.userRepo.save(updateted);
   }
 
-  async updateEmail(id: number, email: string) {
+  async updateEmail(id: number, email: string): Promise<User> {
     const user = await this.findOneById(id);
     const isEmailToken = await this.isEmailToken(email);
     if (isEmailToken) {

@@ -25,6 +25,7 @@ const updateSite = async (
   updates: Partial<Site>
 ): Promise<Site> => {
   const response = await axios.patch(`${baseUrl}/${id}`, updates, {
+    withCredentials: true,
     headers: { Authorization: `Bearer ${authService.getToken()}` },
   });
   const site = response.data;
@@ -33,6 +34,7 @@ const updateSite = async (
 
 const deleteSite = async (id: number): Promise<Site> => {
   const response = await axios.delete(`${baseUrl}/${id}`, {
+    withCredentials: true,
     headers: { Authorization: `Bearer ${authService.getToken()}` },
   });
   const site = response.data;

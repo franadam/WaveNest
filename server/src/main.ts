@@ -15,15 +15,16 @@ const httpsOptions = {
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, { httpsOptions });
+
+  app.enableCors({
+    credentials: true,
+    origin: `${process.env.ORIGIN_FE}`,
+  });
+
   app.use(Helmet());
   app.useGlobalPipes(new ValidationPipe());
   // app.use(csurf());
   app.use(xss());
-
-  app.enableCors({
-    credentials: true,
-    origin: 'http://localhost:3000',
-  });
 
   await app.listen(PORT, () => {
     console.log(`runing on port ${PORT}`);

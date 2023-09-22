@@ -13,6 +13,8 @@
 /config
 /tests 
 /jsons
+/server/dist/
+/dist/
 
 # misc
 .DS_Store

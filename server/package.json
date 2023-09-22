@@ -21,13 +21,13 @@
     "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
-    "@nestjs/serve-static": "^3.0.0",
     "@nestjs/common": "^8.0.0",
     "@nestjs/config": "^2.0.0",
     "@nestjs/core": "^8.0.0",
     "@nestjs/mapped-types": "*",
     "@nestjs/passport": "^8.2.1",
     "@nestjs/platform-express": "^8.0.0",
+    "@nestjs/serve-static": "^3.0.0",
     "@nestjs/typeorm": "^8.0.3",
     "@paypal/checkout-server-sdk": "^1.0.3",
     "@types/paypal__checkout-server-sdk": "^1.0.4",
@@ -52,6 +52,7 @@
     "rxjs": "^7.2.0",
     "streamifier": "^0.1.1",
     "typeorm": "^0.3.6",
+    "wave": "file:..",
     "xss-clean": "^0.1.1"
   },
   "devDependencies": {
