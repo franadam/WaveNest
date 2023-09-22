@@ -6,13 +6,14 @@
   "scripts": {
     "server": "npm run start:prod --prefix server",
     "server:dev": "npm run start:dev --prefix server",
+    "server:build": "npm install --prefix server && run build --prefix server ",
     "client": "set HTTPS=true && npm start --prefix client",
     "ins": "npm install --prefix client && npm install --prefix server",
     "dev": "concurrently \"npm run server:dev\" \"npm run client\"",
     "start": "concurrently \"npm run server\" \"npm run client\"",
     "test": "echo \"Error: no test specified\" && exit 1",
     "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix client && npm run build --prefix client",
-    "render-postbuild": "NPM_CONFIG_PRODUCTION=false npm run build --prefix server && npm install --prefix client && npm run build --prefix client"
+    "render-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix client && npm run build --prefix client"
   },
   "engines": {
     "node": "17.x",
